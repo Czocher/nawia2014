@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import pytz
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -71,7 +72,7 @@ class ThesisSubjectStateChange(models.Model):
 
     # osobami mogącymi powodować zmianę stanu są kierownicy katedr, dziekani/prodziekani lub autor pracy
     # relacja z modelem 'User', ponieważ autor pracy może być klasy 'Employee' lub 'Organization'
-    initiator = models.ForeignKey(User)
+    initiator = models.ForeignKey(User, null = True)
     # dodatkowa informacja nt. zmiany stanu, uzasadnienie decyzji np. odrzucenia tematu
     comment = models.TextField()
 
@@ -99,9 +100,9 @@ class Thesis(models.Model):
     # promotor
     supervisor = models.ForeignKey('Employee', related_name = 'supervisedThesis')
     # promotorzy pomocniczy
-    auxiliarySupervisors = models.ManyToManyField('Employee', related_name = 'auxiliarySupervisedThesis')
+    auxiliarySupervisors = models.ManyToManyField('Employee', related_name = 'auxiliarySupervisedThesis', null = True)
     # gdy autor tematu jest instutucją zewnętrzną, która nie ma prawa bycia promotorem
-    advisor = models.ForeignKey('Organization', related_name = 'advisedThesis')
+    advisor = models.ForeignKey('Organization', related_name = 'advisedThesis', null = True)
 
     reviews = models.ManyToManyField('Review')
     
@@ -170,7 +171,7 @@ class Authorship(models.Model):
     
     student = models.ForeignKey('Student')
 
-    createdAt = models.DateTimeField()
+    createdAt = models.DateTimeField(default = timezone.now())
     updatedAt = models.DateTimeField()
 
     criteriaValues = models.ManyToManyField('SubmissionCriterionValue')
