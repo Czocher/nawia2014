@@ -46,6 +46,9 @@
       <FriendlyName>Python 2.7</FriendlyName>
     </WebPiReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Nawia2014\" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <ProjectExtensions>
     <VisualStudio>

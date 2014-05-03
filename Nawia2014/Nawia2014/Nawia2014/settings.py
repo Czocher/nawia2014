@@ -1,4 +1,6 @@
-﻿# Django settings for Nawia2014 project.
+﻿# -*- coding: utf-8 -*-
+
+# Django settings for Nawia2014 project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,29 +13,22 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'nawia.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    },
+    'ldap': {
+        'ENGINE': 'ldapdb.backends.ldap',
+        'NAME': 'ldap://ldap.wi.pb.edu.pl:10389/',
     }
 }
+DATABASE_ROUTERS = ['ldapdb.router.Router']
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# On Unix systems, a value of None will cause Django to use the same
-# timezone as the operating system.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
-TIME_ZONE = 'America/Chicago'
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
-SITE_ID = 1
+TIME_ZONE = 'Europe/Warsaw'
+LANGUAGE_CODE = 'pl-pl'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -112,17 +107,45 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django_admin_bootstrapped.bootstrap3',
+    'django_admin_bootstrapped',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    #'ldapsync',
+    #'nawia'
 )
+
+# ustawienia autentykacji przez LDAP
+import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+AUTH_LDAP_SERVER_URI = "ldap://ldap.wi.pb.edu.pl:10389"
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,ou=FCS,o=BUT,c=pl", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER=True
+
+# sterowanie grupami w aplikacji z LDAP - w naszym przypadku nie jest to używane
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=nawiagroups,ou=groups,ou=FCS,o=BUT,c=pl", ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)")
+AUTH_LDAP_MIRROR_GROUPS=True
+
+# mapowanie atrybutów użytkowników LDAP na pola klasy 'User'
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+# aktualizacja atrybutów użytkownika przy każdym logowaniu
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
