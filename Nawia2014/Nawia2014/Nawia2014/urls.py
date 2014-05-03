@@ -16,4 +16,5 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^ldapsync/', include('ldapsync.urls', namespace = 'ldapsync')),
+    url(r'^student/', include('student.urls', namespace = 'student')),
 )

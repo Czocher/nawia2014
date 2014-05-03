@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'ldapsync',
     'nawia',
+    'student',
 )
 
 # ustawienia autentykacji przez LDAP
