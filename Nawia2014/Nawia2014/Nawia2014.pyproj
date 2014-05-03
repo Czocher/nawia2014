@@ -51,6 +51,11 @@
     <Compile Include="nawia\urls.py" />
     <Compile Include="nawia\views.py" />
     <Compile Include="nawia\__init__.py" />
+    <Compile Include="student\models.py" />
+    <Compile Include="student\tests.py" />
+    <Compile Include="student\urls.py" />
+    <Compile Include="student\views.py" />
+    <Compile Include="student\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <WebPiReference Include="https://www.microsoft.com/web/webpi/3.0/toolsproductlist.xml%3fDjango">
@@ -70,9 +75,12 @@
     <Folder Include="ldapsync\templates\" />
     <Folder Include="Nawia2014\" />
     <Folder Include="nawia\" />
+    <Folder Include="student\" />
+    <Folder Include="student\templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ldapsync\templates\index.html" />
+    <Content Include="student\templates\index.html" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />
