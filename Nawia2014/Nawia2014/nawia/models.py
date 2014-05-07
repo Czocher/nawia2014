@@ -7,13 +7,16 @@ from datetime import datetime
 from django.utils import timezone
 
 class ThesisSubject(models.Model):
-    statesHistory = models.ManyToManyField('ThesisSubjectStateChange')
+    u'''
+    Temat pracy dyplomowej
+    '''
+    statesHistory = models.ManyToManyField('ThesisSubjectStateChange', null = True, blank = True)
     # self.state : ThesisSubjectStateChange
 
     title = models.CharField(max_length = 511)
     description = models.TextField()
     # słowa kluczowe związane z problematyką poruszaną w pracy
-    keywords = models.ManyToManyField('Keyword')
+    keywords = models.ManyToManyField('Keyword', null = True, blank = True)
     
     # TODO obsługa prac dedykowanych
     # isDedicated = models.BooleanField(default = false)
@@ -21,17 +24,17 @@ class ThesisSubject(models.Model):
     
     # maksymalna liczba osób w zespole, jeśli jest to praca zespołowa
     teamMembersLimit = models.PositiveSmallIntegerField(default = 1)
-    # self.isTeamWork = teamMembersLimit > 0 ? True : False
+    # self.isTeamWork = teamMembersLimit > 1 ? True : False
 
     # autor tematu - co najmniej doktor lub firma zewnętrzna
     # relacja z modelem 'User', ponieważ autor pracy może być klasy 'Employee' lub 'Organization'
     author = models.ForeignKey(User)
 
-    attachments = models.ManyToManyField('Attachment')
+    attachments = models.ManyToManyField('Attachment', null = True, blank = True)
 
     # pytania, na które musi odpowiedzieć osoba zgłaszająca chęć pisania pracy na dany temat
     # na podstawie wartości kryteriów ustalana jest kolejność studentów na liście zainteresowanych
-    criteria = models.ManyToManyField('SubmissionCriterion')
+    criteria = models.ManyToManyField('SubmissionCriterion', null = True, blank = True)
 
     # flaga określająca czy praca ma zostać opublikowana automatycznie po jej zatwierdzeniu przez wyższe szczeble
     isAutoPublished = models.BooleanField(default = True)
@@ -47,7 +50,14 @@ class ThesisSubject(models.Model):
     def __unicode__(self):
         return '"%s" - %s' % (self.title, self.author)
 
+    class Meta:
+        verbose_name = 'temat pracy dyplomowej'
+        verbose_name_plural = 'tematy prac dyplomowych'
+
 class ThesisSubjectStateChange(models.Model):
+    u'''
+    Zmiana stanu tematu pracy z uwzględnieniem czasu jej zajścia i osoby będącej jej źródłem.
+    '''
     DRAFT = 'dr'
     VERIFICATION_READY = 'vr'
     DEPARTMENT_HEAD_VERIFIED = 'dv'
@@ -72,11 +82,16 @@ class ThesisSubjectStateChange(models.Model):
 
     # osobami mogącymi powodować zmianę stanu są kierownicy katedr, dziekani/prodziekani lub autor pracy
     # relacja z modelem 'User', ponieważ autor pracy może być klasy 'Employee' lub 'Organization'
-    initiator = models.ForeignKey(User, null = True)
+    initiator = models.ForeignKey(User, null = True, blank = True)
     # dodatkowa informacja nt. zmiany stanu, uzasadnienie decyzji np. odrzucenia tematu
-    comment = models.TextField()
+    comment = models.TextField(blank = True)
 
-    occuredAt = models.DateTimeField(default = timezone.now())
+    occuredAt = models.DateTimeField(editable = False, null = True, blank = True)
+
+    def save(self, *args, **kwargs):
+        if self.id == None:
+            self.occuredAt = timezone.now()
+        super(ThesisSubjectStateChange, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return '%s (%s), %s' % (self.get_state_display(), self.occuredAt, self.initiator)
@@ -85,6 +100,9 @@ class ThesisSubjectStateChange(models.Model):
         get_latest_by = "occuredAt"
 
 class Thesis(models.Model):
+    u'''
+    Praca dyplomowa
+    '''
     IN_WORK = 'in work'
     REVIEW_READY = 'ready to be reviewed'
     IN_REVIEW = 'in review'
@@ -95,16 +113,21 @@ class Thesis(models.Model):
     # zapis na pracę zawiera dane typu temat, autor tematu, autor pracy
     authorship = models.OneToOneField('Authorship')
     isDone = models.BooleanField(default = False)
-    attachments = models.ManyToManyField('Attachment')
+    attachments = models.ManyToManyField('Attachment', null = True, blank = True)
 
     # promotor
-    supervisor = models.ForeignKey('Employee', related_name = 'supervisedThesis')
+    supervisor = models.ForeignKey('Employee',
+                                   related_name = 'supervisedThesis')
     # promotorzy pomocniczy
-    auxiliarySupervisors = models.ManyToManyField('Employee', related_name = 'auxiliarySupervisedThesis', null = True)
+    auxiliarySupervisors = models.ManyToManyField('Employee',
+                                                  related_name = 'auxiliarySupervisedThesis',
+                                                  null = True, blank = True)
     # gdy autor tematu jest instutucją zewnętrzną, która nie ma prawa bycia promotorem
-    advisor = models.ForeignKey('Organization', related_name = 'advisedThesis', null = True)
+    advisor = models.ForeignKey('Organization',
+                                related_name = 'advisedThesis',
+                                null = True, blank = True)
 
-    reviews = models.ManyToManyField('Review')
+    reviews = models.ManyToManyField('Review', null = True, blank = True)
     
     # self.state
     # TODO zastanowić się nad stanami recenzji
@@ -150,6 +173,9 @@ class Thesis(models.Model):
         return '"%s", %s, %s' % (self.subject, self.student, self.supervisor)
 
 class Authorship(models.Model):
+    u'''
+    Powiązanie studenta z tematem pracy, na który się początkowo zapisuje, a następnie (po zaakceptowaniu przez promotora) realizuje.
+    '''
     PROPOSED = 'p'
     ACCEPTED = 'a'
     REJECTED = 'r'
@@ -167,19 +193,27 @@ class Authorship(models.Model):
     thesisSubject = models.ForeignKey('ThesisSubject')
     # dodatkowe informacje przekazywane autorowi tematu,
     # np. uzasadnienie chęci pisania pracy na dany temat lub przypomnienie o odbytej rozmowie
-    comment = models.TextField()
+    comment = models.TextField(blank = True)
     
     student = models.ForeignKey('Student')
 
-    createdAt = models.DateTimeField(default = timezone.now())
-    updatedAt = models.DateTimeField()
+    createdAt = models.DateTimeField(editable = False, null = True, blank = True)
+    updatedAt = models.DateTimeField(editable = False, null = True, blank = True)
 
-    criteriaValues = models.ManyToManyField('SubmissionCriterionValue')
+    def save(self, *args, **kwargs):
+        if self.id != None:
+            self.updatedAt = timezone.now()
+        else:
+            self.createdAt = timezone.now()
+        super(Authorship, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return '"%s", %s (%s)' % (self.subject, self.student, self.get_state_display())
 
 class SubmissionCriterion(models.Model):
+    u'''
+    Rodzaj kryterium/pytania kierowanego przez autora tematu do zgłaszających się studentów.
+    '''
     BOOLEAN = 'b'
     INTEGER = 'd'
     FLOAT = 'f'
@@ -196,6 +230,9 @@ class SubmissionCriterion(models.Model):
         return '%s (%s)' % (self.label, self.get_type_display())
 
 class SubmissionCriterionValue(models.Model):
+    u'''
+    Para (kryterium, wartość/odpowiedź), np. (Ocena z programowania obiektowego (float), '3.5').
+    '''
     criterion = models.ForeignKey('SubmissionCriterion')
     __value = models.CharField(max_length = 15, db_column = 'value')
 
@@ -245,11 +282,11 @@ class Review(models.Model):
                              choices = REVIEW_AUTHOR_TYPE_CHOICES)
     author = models.ForeignKey('Employee')
 
-    comment = models.TextField()
-    mark = models.FloatField() # dodać walidację
+    comment = models.TextField(blank = True)
+    mark = models.FloatField(null = True, blank = True) # dodać walidację
     isDone = models.BooleanField(default = False)
 
-    attachments = models.ManyToManyField('Attachment')
+    attachments = models.ManyToManyField('Attachment', null = True, blank = True)
 
     def __unicode__(self):
         return '%s (%s) => %s' % (self.author, self.get_authorType_display(), self.mark)
@@ -261,11 +298,14 @@ class Keyword(models.Model):
     pass
 
 class StudyCycle(models.Model):
+    u'''
+    Cykl kształcenia (np. informatyka, inżynierskie, stacjonarne, 2011Z-2014Z)
+    '''
     ldapId = models.CharField(max_length = 255, unique = True)
     name = models.CharField(max_length = 255)
 
-    submissionsOpenAt = models.DateField(null=True, blank=True, default=None)
-    submissionsCloseAt = models.DateField(null=True, blank=True, default=None)
+    submissionsOpenAt = models.DateField(default=None, null=True, blank=True)
+    submissionsCloseAt = models.DateField(default=None, null=True, blank=True)
     isLdapSynced = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -280,44 +320,61 @@ class UserBasedModel(models.Model):
 
 class Student(UserBasedModel):
     # jeden student może realizować wiele cykli kształcenia
-    studyCycles = models.ManyToManyField('StudyCycle')
+    studyCycles = models.ManyToManyField('StudyCycle', null = True, blank = True) # tymczasowo
 
     def __unicode__(self):
         return unicode(self.user)
 
 class Employee(UserBasedModel):
+    u'''
+    Pracownik uczelni
+    '''
     # tytuł naukowy
-    title = models.CharField(max_length = 255)
+    title = models.CharField(max_length = 255, blank = True)
     # stanowisko pracy (asystent, adiunkt, itp.)
-    position = models.CharField(max_length = 255)
+    position = models.CharField(max_length = 255, blank = True)
 
     # jednostka organizacyjna (katedra, zakład, itp.), do której należy dany pracownik
     organizationalUnit = models.ForeignKey('OrganizationalUnit')
 
-    def canSupervise(self):
-        return 'dr' in self.title
+    # self.canSupervise : bool
+    # self.canReview : bool
 
-    def canReview(self):
-        return 'dr' in self.title
+    def __getattr__(self, name):
+        if name == 'canSupervise':
+            return 'dr' in self.title
+        elif name == 'canReview':
+            return 'dr' in self.title
+        else:
+            raise AttributeError(name)
 
     def __unicode__(self):
         return '%s %s' % (self.title, self.user)
 
 class Organization(UserBasedModel):
+    u'''
+    Organizacja zewnętrzna (firma, stowarzyszenie, urząd, itp.)
+    '''
     name = models.CharField(max_length = 255)
 
     def __unicode__(self):
         return '%s, %s' % (self.name, self.user)
 
 class OrganizationalUnit(models.Model):
+    u'''
+    Jednostka organizacyjna (katedra, dziekanat, itp.)
+    '''
     ldapId = models.CharField(max_length = 31, unique = True)
     name = models.CharField(max_length = 255)
-    head = models.ForeignKey(Employee)
+    head = models.ForeignKey(Employee, null = True, blank = True) # 'null = True' prawdopodonie tymczasowo
 
     def __unicode__(self):
         return self.name
 
 class Authority(models.Model):
+    u'''
+    Władze wydziału
+    '''
     DEAN = 'd'
     VICE_DEAN_FOR_PROMOTION = 'pr'
     VICE_DEAN_FOR_RESEARCH = 'sc'
