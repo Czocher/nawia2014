@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^ldapsync/', include('ldapsync.urls', namespace = 'ldapsync')),
     url(r'^student/', include('student.urls', namespace = 'student')),
+    url(r'^/', include('nawia.urls', namespace = 'nawia')),
 )
