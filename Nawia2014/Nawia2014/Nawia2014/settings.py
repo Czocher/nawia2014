@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'ldapsync',
     'nawia',
     'student',
+    'db_tools',
 )
 
 # ustawienia autentykacji przez LDAP

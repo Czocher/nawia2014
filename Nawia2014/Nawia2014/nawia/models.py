@@ -3,6 +3,7 @@
 import pytz
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser 
 from datetime import datetime
 from django.utils import timezone
 
@@ -311,12 +312,15 @@ class StudyCycle(models.Model):
     def __unicode__(self):
         return self.name
 
+
+
 class UserBasedModel(models.Model):
     user = models.OneToOneField(User)
     isLdapSynced = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
+
 
 class Student(UserBasedModel):
     # jeden student może realizować wiele cykli kształcenia
