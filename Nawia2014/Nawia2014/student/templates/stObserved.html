@@ -1,0 +1,16 @@
+<html>
+<head><title></title></head>
+
+<body>
+
+    {% block content %}
+    <h2>Obserwowane tematy</h2>
+    <ul>
+        {% for observed in observedList %}
+            <li>{{ observed.title }} {{ observed.description }}</li>
+        {% endfor %}
+    </ul>
+    {% endblock %}
+
+</body>
+</html>

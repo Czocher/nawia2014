@@ -75,15 +75,22 @@
     <Folder Include="ldapsync\templates\" />
     <Folder Include="Nawia2014\" />
     <Folder Include="nawia\" />
+    <Folder Include="nawia\templates\" />
     <Folder Include="student\" />
     <Folder Include="student\templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ldapsync\templates\index.html" />
+    <Content Include="nawia\templates\home.html" />
+    <Content Include="nawia\templates\account.html" />
+    <Content Include="nawia\templates\help.html" />
+    <Content Include="student\templates\error.html" />
+    <Content Include="student\templates\stPreview.html" />
+    <Content Include="student\templates\stObserved.html" />
     <Content Include="student\templates\stList.html" />
     <Content Include="student\templates\stAccount.html" />
     <Content Include="student\templates\stHelp.html" />
-    <Content Include="student\templates\stIndex.html" />
+    <Content Include="student\templates\stHome.html" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />
