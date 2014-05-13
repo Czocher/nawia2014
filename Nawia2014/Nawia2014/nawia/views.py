@@ -1,14 +1,22 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template import RequestContext, loader
 
 # strona glowna aplikacji
 def home(request):
-    return render(request, 'home.html', {})
+    template = loader.get_template('nawia/home.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
+
 
 # strona pomocy
 def help(request):
-    return render(request, 'help.html', {})
+    template = loader.get_template('nawia/help.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
 
 # strona ustawien konta
 def account(request):

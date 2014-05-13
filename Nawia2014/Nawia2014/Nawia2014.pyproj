@@ -76,21 +76,28 @@
     <Folder Include="Nawia2014\" />
     <Folder Include="nawia\" />
     <Folder Include="nawia\templates\" />
+    <Folder Include="nawia\templates\nawia\" />
+    <Folder Include="static\" />
+    <Folder Include="static\img\" />
     <Folder Include="student\" />
     <Folder Include="student\templates\" />
+    <Folder Include="student\templates\student\" />
+    <Folder Include="templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ldapsync\templates\index.html" />
-    <Content Include="nawia\templates\home.html" />
-    <Content Include="nawia\templates\account.html" />
-    <Content Include="nawia\templates\help.html" />
-    <Content Include="student\templates\error.html" />
-    <Content Include="student\templates\stPreview.html" />
-    <Content Include="student\templates\stObserved.html" />
-    <Content Include="student\templates\stList.html" />
-    <Content Include="student\templates\stAccount.html" />
-    <Content Include="student\templates\stHelp.html" />
-    <Content Include="student\templates\stHome.html" />
+    <Content Include="nawia\templates\nawia\home.html" />
+    <Content Include="nawia\templates\nawia\sidebar.html" />
+    <Content Include="static\img\banner-clouds.png" />
+    <Content Include="student\templates\student\applied.html" />
+    <Content Include="student\templates\student\assigned.html" />
+    <Content Include="student\templates\student\home.html" />
+    <Content Include="student\templates\student\list.html" />
+    <Content Include="student\templates\student\observed.html" />
+    <Content Include="student\templates\student\preview.html" />
+    <Content Include="student\templates\student\sidebar.html" />
+    <Content Include="templates\base.html" />
+    <Content Include="templates\base_topbar.html" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />

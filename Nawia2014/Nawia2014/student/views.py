@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template import RequestContext, loader
 from django.views.generic import ListView
 from nawia.models import ThesisSubject
 from nawia.models import Authorship
@@ -12,7 +13,35 @@ widoki modulu studenta
 
 # widok strony glownej
 def home(request):
-    return render(request, 'stHome.html', {})
+    template = loader.get_template('student/home.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
+
+#TODO: pobrac liste tematow, umiescic ja w kontekscie
+def list(request):
+    template = loader.get_template('student/list.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
+
+def observed(request):
+    template = loader.get_template('student/observed.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
+
+def applied(request):
+    template = loader.get_template('student/applied.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
+
+def assigned(request):
+    template = loader.get_template('student/assigned.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))
 
 # strona pomocy modulu studenta
 def help(request):

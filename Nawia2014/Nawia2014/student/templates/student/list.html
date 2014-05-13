@@ -1,16 +1,14 @@
-<html>
-<head><title></title></head>
+{% extends "base.html" %}
 
-<body>
+{% block sidebar %}
+    {% include "student/sidebar.html" %}
+{% endblock sidebar %}
 
-    {% block content %}
+{% block content %}
     <h2>Tematy</h2>
     <ul>
         {% for thesisSubject in thesisSubjects %}
             <li>{{ thesisSubject.title }} {{ thesisSubject.description }}</li>
         {% endfor %}
     </ul>
-    {% endblock %}
-
-</body>
-</html>
+{% endblock content %}

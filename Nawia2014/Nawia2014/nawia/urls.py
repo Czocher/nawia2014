@@ -1,8 +1,9 @@
 from django.conf.urls import patterns, url
+from nawia import views
 
 urlpatterns = patterns('',
-    (r'^$', 'nawia.views.home'),
-    (r'^home$', 'nawia.views.home'),
-    (r'^help$', 'nawia.views.help'),
-    (r'^account$', 'nawia.views.account'),
+    (r'^$', views.home),
+    (r'^home$', views.home),
+    (r'^help$', views.help),
+    (r'^account$', views.account),
 )
