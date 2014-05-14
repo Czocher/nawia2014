@@ -5,6 +5,7 @@ from nawia import models as nawia
 from db_tools.management.commands import gen_data
 import datetime
 from django.contrib.auth.models import User
+from django.core.management import call_command
 
 
 
@@ -17,9 +18,15 @@ class Command(BaseCommand):
         u''' Implementacja generowania danych dla bazy'''
         gen = gen_data.Gen_data()
 
+        #usuniecie danych z poprzeniej bazy danych
+        call_command('flush', interactive=True)
+
+
         org_units = []
         employees = []
         tssc = []
+
+
 
 
         #wygenerowanie jednostek organizacyjnych
@@ -32,7 +39,7 @@ class Command(BaseCommand):
             org_unit.save()
             org_units.append(org_unit)
 
-        
+        '''
         #wygenerowanie puli pracownikow
         seed = gen.get_random_int()
         for i in range(1, 10):
@@ -50,7 +57,7 @@ class Command(BaseCommand):
 
 
 
-        '''
+        
         #wiazanie pracownikow z jednostkami organizacyjnmi
         emp_count = len(employees)
         count_emp_in_org_unit = emp_count/len(org_units)
@@ -170,6 +177,7 @@ class Command(BaseCommand):
         
         
 
-
-        self.stdout.write('Generowanie zawartosci bazy przebieglo pomyslnie.')
+        self.stdout.write('---------------------------------------------------')
+        self.stdout.write('|Generowanie zawartosci bazy przebieglo pomyslnie.|')
+        self.stdout.write('---------------------------------------------------')
 
