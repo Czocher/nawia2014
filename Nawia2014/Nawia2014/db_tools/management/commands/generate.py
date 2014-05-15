@@ -16,10 +16,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         u''' Implementacja generowania danych dla bazy'''
+
         gen = gen_data.Gen_data()
 
         #usuniecie danych z poprzeniej bazy danych
         call_command('flush', interactive=True)
+
+        self.stdout.write(' ')
+        self.stdout.write('---------------------------------------------------')
+        self.stdout.write('|Rozpoczeto generowanie danych.                   |')
+        self.stdout.write('---------------------------------------------------')
 
 
         org_units = []
@@ -32,16 +38,17 @@ class Command(BaseCommand):
         #wygenerowanie jednostek organizacyjnych
         for unitName in gen.organizationalUnitNames:
             # jednostka organizacyjna katedra dziekanat
-            org_unit = nawia.OrganizationalUnit(ldapId=gen.get_int(),
+            org_unit = nawia.OrganizationalUnit(ldapId=gen.get_random_int(),
                                                 name=unitName,
                                                 #head=
                                                 )
             org_unit.save()
             org_units.append(org_unit)
 
-        '''
+        
         #wygenerowanie puli pracownikow
         seed = gen.get_random_int()
+
         for i in range(1, 10):
             # pracownik uczelni
             index = seed+i
@@ -50,14 +57,14 @@ class Command(BaseCommand):
             employee = nawia.Employee(title="prof dr hab",
                                       user=user_emp,
                                       #position=,
-                                      #organizationalUnit=org_unit,
+                                      organizationalUnit=org_units[0],
                                       )
             employee.save()
             employees.append(employee)
 
 
 
-        
+        '''
         #wiazanie pracownikow z jednostkami organizacyjnmi
         emp_count = len(employees)
         count_emp_in_org_unit = emp_count/len(org_units)
@@ -176,7 +183,7 @@ class Command(BaseCommand):
                                     )
         
         
-
+        self.stdout.write(' ')
         self.stdout.write('---------------------------------------------------')
         self.stdout.write('|Generowanie zawartosci bazy przebieglo pomyslnie.|')
         self.stdout.write('---------------------------------------------------')

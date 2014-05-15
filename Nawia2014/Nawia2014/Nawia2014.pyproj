@@ -30,6 +30,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="db_tools\management\commands\generate.py" />
+    <Compile Include="db_tools\management\commands\gen_data.py" />
+    <Compile Include="db_tools\management\commands\__init__.py" />
+    <Compile Include="db_tools\management\__init__.py" />
+    <Compile Include="db_tools\tests.py" />
+    <Compile Include="db_tools\__init__.py" />
     <Compile Include="ldapdb\router.py" />
     <Compile Include="ldapdb\tests.py" />
     <Compile Include="ldapdb\__init__.py" />
@@ -70,6 +76,9 @@
     </WebPiReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="db_tools\" />
+    <Folder Include="db_tools\management\" />
+    <Folder Include="db_tools\management\commands\" />
     <Folder Include="ldapdb\" />
     <Folder Include="ldapsync\" />
     <Folder Include="ldapsync\templates\" />
