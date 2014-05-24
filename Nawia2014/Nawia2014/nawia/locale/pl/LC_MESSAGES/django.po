@@ -1,0 +1,336 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pl\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-05-13 19:45+0200\n"
+"PO-Revision-Date: 2014-05-13 21:54+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"X-Generator: Poedit 1.6.5\n"
+
+#: .\models.py:15 .\nawia\models.py:15
+msgid "history of states changes"
+msgstr "historia zmian stanów"
+
+#: .\models.py:19 .\nawia\models.py:19
+msgid "thesis title"
+msgstr "tytuł tematu"
+
+#: .\models.py:20 .\nawia\models.py:20
+msgid "thesis description"
+msgstr "opis tematu"
+
+#: .\models.py:23 .\models.py:360 .\nawia\models.py:23 .\nawia\models.py:360
+msgid "keywords"
+msgstr "słowa kluczowe"
+
+#: .\models.py:31 .\nawia\models.py:31
+msgid "maximum number of team members"
+msgstr "maksymalna liczba członków zespołu"
+
+#: .\models.py:37 .\nawia\models.py:37
+msgid "author of thesis subject"
+msgstr "autor tematu pracy"
+
+#: .\models.py:40 .\nawia\models.py:40
+msgid "attachments to thesis"
+msgstr "załączniki do pracy dyplomowej"
+
+#: .\models.py:45 .\nawia\models.py:45
+msgid "questions for the student who apply to write a given thesis"
+msgstr ""
+"pytania, na które musi odpowiedzieć student jeśli chce zapisać sie na dany "
+"temat"
+
+#: .\models.py:49 .\nawia\models.py:49
+msgid "information about automatically published thesis after approval"
+msgstr ""
+"informacja o tym czy praca ma być automatycznie publikowana po jej "
+"zatwierdzeniu"
+
+#: .\models.py:63 .\models.py:221 .\nawia\models.py:63 .\nawia\models.py:221
+msgid "subject of thesis"
+msgstr "temat pracy"
+
+#: .\models.py:64 .\nawia\models.py:64
+msgid "subjects of theses"
+msgstr "tematy prac"
+
+#: .\models.py:91 .\nawia\models.py:91
+msgid "actual thesis subject state"
+msgstr "aktyalny stan tematu pracy"
+
+#: .\models.py:96 .\nawia\models.py:96
+msgid "person responsible for changing thesis subject state"
+msgstr "osoba odpowiedzialna za zmiane stanu tematu pracy"
+
+#: .\models.py:99 .\nawia\models.py:99
+msgid "note about thesis subject state"
+msgstr "komentarz dotyczący stanu pracy"
+
+#: .\models.py:102 .\nawia\models.py:102
+msgid "modification date"
+msgstr "data modyfikacji"
+
+#: .\models.py:114 .\nawia\models.py:114
+msgid "change subject of thesis state"
+msgstr "zmiana stanu tematu pracy"
+
+#: .\models.py:115 .\nawia\models.py:115
+msgid "changes subjects of theses states"
+msgstr "zmiany stanów tematów prac"
+
+#: .\models.py:130 .\nawia\models.py:130
+msgid "informations about thesis"
+msgstr "informacje dotyczące pracy"
+
+#: .\models.py:132 .\nawia\models.py:132
+msgid "inform if thesis is done"
+msgstr "informacja mówiąca, że praca jest ukończona"
+
+#: .\models.py:139 .\nawia\models.py:139
+msgid "supervisor"
+msgstr "promotor"
+
+#: .\models.py:144 .\nawia\models.py:144
+msgid "auxiliary supervisors"
+msgstr "promotor pomocniczy"
+
+#: .\models.py:149 .\nawia\models.py:149
+msgid ""
+"university employee supervising thesis if author is external organization"
+msgstr ""
+"pracownik uczelni nadzorujący prace w przypadku, gdy autorem tematu pracy "
+"jest organizacja zewnętrzna"
+
+#: .\models.py:152 .\nawia\models.py:152
+msgid "thesis reviews"
+msgstr "recenzje pracy"
+
+#: .\models.py:198 .\nawia\models.py:198
+msgid "thesis"
+msgstr "praca dyplomowa"
+
+#: .\models.py:199 .\nawia\models.py:199
+msgid "theses"
+msgstr "prace dyplomowe"
+
+#: .\models.py:218 .\nawia\models.py:218
+msgid "authorship state"
+msgstr "stan powiązania studenta z tematem pracy"
+
+#: .\models.py:225 .\nawia\models.py:225
+msgid "informations from student to thesis subject author"
+msgstr ""
+"informacje od studenta zgłaszającego chęć pisania danej pracy do jej autora"
+
+#: .\models.py:228 .\models.py:404 .\nawia\models.py:228 .\nawia\models.py:404
+msgid "student"
+msgstr "student"
+
+#: .\models.py:231 .\nawia\models.py:231
+msgid "date of create authorship"
+msgstr "data utworzenia powiązania studenta z pracą dyplomową"
+
+#: .\models.py:233 .\nawia\models.py:233
+msgid "date of last modification"
+msgstr "data ostatniej modyfikacji powiązania studenta z pracą dyplomową"
+
+#: .\models.py:246 .\nawia\models.py:246
+msgid "authorship"
+msgstr "powiązanie studenta z pracą dyplomową"
+
+#: .\models.py:247 .\nawia\models.py:247
+msgid "authorships"
+msgstr "powiązania studentów z pracami dyplomowymi"
+
+#: .\models.py:263 .\nawia\models.py:263
+msgid "type of the criterion"
+msgstr "typ kryterium"
+
+#: .\models.py:265 .\nawia\models.py:265
+msgid "content of the criterion"
+msgstr "treść kryterium"
+
+#: .\models.py:271 .\nawia\models.py:271
+msgid "submission criterion"
+msgstr "kryterium zapisu na pracę"
+
+#: .\models.py:272 .\nawia\models.py:272
+msgid "submission criteria"
+msgstr "kryteria zapisu na pracę"
+
+#: .\models.py:317 .\nawia\models.py:317
+msgid "submission criterion value"
+msgstr "wartość kryterium zapisu na pracę"
+
+#: .\models.py:318 .\nawia\models.py:318
+msgid "submission criteria values"
+msgstr "wartości kryteriów zapisu na pracę"
+
+#: .\models.py:331 .\nawia\models.py:331
+msgid "review author type"
+msgstr "rodzaj osoby recenzującej"
+
+#: .\models.py:333 .\nawia\models.py:333
+msgid "review author name"
+msgstr "recenzent"
+
+#: .\models.py:336 .\nawia\models.py:336
+msgid "reviewer's comment"
+msgstr "komentarz recenzenta"
+
+#: .\models.py:338 .\nawia\models.py:338
+msgid "mark"
+msgstr "ocena"
+
+#: .\models.py:340 .\nawia\models.py:340
+msgid "information about adding review"
+msgstr "informacja o dodaniu recenzji"
+
+#: .\models.py:343 .\nawia\models.py:343
+msgid "attachments to review"
+msgstr "załączniki do recenzji"
+
+#: .\models.py:349 .\nawia\models.py:349
+msgid "review"
+msgstr "recenzja"
+
+#: .\models.py:350 .\nawia\models.py:350
+msgid "reviews"
+msgstr "recenzje"
+
+#: .\models.py:354 .\nawia\models.py:354
+msgid "attachment"
+msgstr "załącznik"
+
+#: .\models.py:355 .\nawia\models.py:355
+msgid "attachments"
+msgstr "załączniki"
+
+#: .\models.py:359 .\nawia\models.py:359
+msgid "keyword"
+msgstr "słowo kluczowe"
+
+#: .\models.py:367 .\models.py:459 .\nawia\models.py:367 .\nawia\models.py:459
+msgid "LDAP ID"
+msgstr "LDAP ID"
+
+#: .\models.py:369 .\nawia\models.py:369
+msgid "study cycle name"
+msgstr "cykl kształcenia"
+
+#: .\models.py:372 .\nawia\models.py:372
+msgid "start study date"
+msgstr "data rozpoczęcia studiów"
+
+#: .\models.py:374 .\nawia\models.py:374
+msgid "finish study date"
+msgstr "data zakończenia studiów"
+
+#: .\models.py:376 .\models.py:388 .\nawia\models.py:376 .\nawia\models.py:388
+msgid "information thath LDAP is synced"
+msgstr "informacja o synchronizacji LDAP-a"
+
+#: .\models.py:382 .\models.py:398 .\nawia\models.py:382 .\nawia\models.py:398
+msgid "study cycle"
+msgstr "cykl kształcenia"
+
+#: .\models.py:383 .\nawia\models.py:383
+msgid "study cycles"
+msgstr "cykle kształcenia"
+
+#: .\models.py:386 .\nawia\models.py:386
+msgid "user"
+msgstr "użytkownik"
+
+#: .\models.py:392 .\nawia\models.py:392
+msgid "user based model"
+msgstr "model użytkownika"
+
+#: .\models.py:393 .\nawia\models.py:393
+msgid "users based models"
+msgstr "modele użytkownika"
+
+#: .\models.py:405 .\nawia\models.py:405
+msgid "students"
+msgstr "studenci"
+
+#: .\models.py:413 .\nawia\models.py:413
+msgid "academic title"
+msgstr "tytuł akademicki"
+
+#: .\models.py:416 .\nawia\models.py:416
+msgid "worksite"
+msgstr "stanowisko pracy"
+
+#: .\models.py:420 .\models.py:469 .\nawia\models.py:420 .\nawia\models.py:469
+msgid "organizational unit"
+msgstr "jednostka organizacyjna"
+
+#: .\models.py:437 .\nawia\models.py:437
+msgid "employee"
+msgstr "pracownik"
+
+#: .\models.py:438 .\nawia\models.py:438
+msgid "employess"
+msgstr "pracownicy"
+
+#: .\models.py:445 .\nawia\models.py:445
+msgid "organization name"
+msgstr "nazwa organizacji zewnętrznej"
+
+#: .\models.py:451 .\nawia\models.py:451
+msgid "organization"
+msgstr "organizacja"
+
+#: .\models.py:452 .\nawia\models.py:452
+msgid "organizations"
+msgstr "organizacje"
+
+#: .\models.py:461 .\nawia\models.py:461
+msgid "organizational unit name"
+msgstr "nazwa jednostki organizacyjnej"
+
+#: .\models.py:463 .\nawia\models.py:463
+msgid "organizational unit head"
+msgstr "kierownik jednostki organizacyjnej"
+
+#: .\models.py:470 .\nawia\models.py:470
+msgid "organizational units"
+msgstr "jednostki organizacyjne"
+
+#: .\models.py:488 .\nawia\models.py:488
+msgid "authority role"
+msgstr "stanowisko"
+
+#: .\models.py:490 .\nawia\models.py:490
+msgid "person occupying the worksite"
+msgstr "osoba zasiadająca na danym stanowisku"
+
+#: .\models.py:496 .\nawia\models.py:496
+msgid "authority"
+msgstr "władza wydziału"
+
+#: .\models.py:497 .\nawia\models.py:497
+msgid "authorities"
+msgstr "władze wydziału"
+
+#: .\nawia\models.py:279
+msgid "criterion"
+msgstr "kryterium"
+
+#: .\nawia\models.py:281
+msgid "value of criterion"
+msgstr "wartość kryterium"
