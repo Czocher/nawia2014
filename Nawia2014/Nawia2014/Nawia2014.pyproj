@@ -7,6 +7,13 @@
     <RootNamespace>Nawia2014</RootNamespace>
     <InterpreterId>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
+    <CommandLineArguments />
+    <InterpreterPath />
+    <InterpreterArguments />
+    <DjangoSettingsModule>$(MSBuildProjectName).settings</DjangoSettingsModule>
+    <WebBrowserUrl />
+    <WebBrowserPort>
+    </WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,6 +59,7 @@
     <Compile Include="Nawia2014\urls.py" />
     <Compile Include="Nawia2014\wsgi.py" />
     <Compile Include="nawia\admin.py" />
+    <Compile Include="nawia\permissions.py" />
     <Compile Include="nawia\models.py" />
     <Compile Include="nawia\tests.py" />
     <Compile Include="nawia\urls.py" />
