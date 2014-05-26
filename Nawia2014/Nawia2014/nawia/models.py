@@ -28,7 +28,7 @@ class ThesisSubject(models.Model):
     
     # maksymalna liczba osób w zespole, jeśli jest to praca zespołowa
     teamMembersLimit = models.PositiveSmallIntegerField(default = 1, 
-                                                        verbose_name =_('maximum number of team members'))
+                                                        verbose_name =_('number of team members'))
     # self.isTeamWork = teamMembersLimit > 1 ? True : False
 
     # autor tematu - co najmniej doktor lub firma zewnętrzna
@@ -37,7 +37,7 @@ class ThesisSubject(models.Model):
                                verbose_name =_('author of thesis subject'))
 
     attachments = models.ManyToManyField('Attachment', null = True, blank = True, 
-                                         verbose_name =_('attachments to thesis'))
+                                         verbose_name =_('attachments'))
 
     # pytania, na które musi odpowiedzieć osoba zgłaszająca chęć pisania pracy na dany temat
     # na podstawie wartości kryteriów ustalana jest kolejność studentów na liście zainteresowanych
@@ -46,7 +46,7 @@ class ThesisSubject(models.Model):
 
     # flaga określająca czy praca ma zostać opublikowana automatycznie po jej zatwierdzeniu przez wyższe szczeble
     isAutoPublished = models.BooleanField(default = True, 
-                                            verbose_name = _('information about automatically published thesis after approval'))
+                                            verbose_name = _('is published automatically'))
 
     def __getattr__(self, name):
         if name == 'state':
@@ -99,7 +99,7 @@ class ThesisSubjectStateChange(models.Model):
                                verbose_name = _('note about thesis subject state'))
 
     occuredAt = models.DateTimeField(editable = False, null = True, blank = True, 
-                                     verbose_name = _('modification date'))
+                                     verbose_name = _('happend'))
 
     def save(self, *args, **kwargs):
         if self.id == None:
@@ -111,8 +111,8 @@ class ThesisSubjectStateChange(models.Model):
 
     class Meta:
         get_latest_by = "occuredAt"
-        verbose_name = _('change subject of thesis state')
-        verbose_name_plural = _('changes subjects of theses states')
+        verbose_name = _('state change of thesis subject')
+        verbose_name_plural = _('states changes of thesis subject')
 
 class Thesis(models.Model):
     u'''
@@ -146,7 +146,7 @@ class Thesis(models.Model):
     advisor = models.ForeignKey('Organization',
                                 related_name = 'advisedThesis',
                                 null = True, blank = True,
-                                verbose_name = _('university employee supervising thesis if author is external organization'))
+                                verbose_name = _('advisor'))
 
     reviews = models.ManyToManyField('Review', null = True, blank = True,
                                      verbose_name = _('thesis reviews'))
@@ -228,7 +228,7 @@ class Authorship(models.Model):
                                 verbose_name = _('student'))
 
     createdAt = models.DateTimeField(editable = False, null = True, blank = True,
-                                     verbose_name = _('date of create authorship'))
+                                     verbose_name = _('date of authorship proposal'))
     updatedAt = models.DateTimeField(editable = False, null = True, blank = True,
                                      verbose_name = _('date of last modification'))
 
@@ -330,7 +330,7 @@ class Review(models.Model):
                              choices = REVIEW_AUTHOR_TYPE_CHOICES,
                              verbose_name = _('review author type'))
     author = models.ForeignKey('Employee',
-                                verbose_name = _('review author name'))
+                                verbose_name = _('review author'))
 
     comment = models.TextField(blank = True,
                                verbose_name = _("reviewer's comment"))
@@ -340,7 +340,7 @@ class Review(models.Model):
                                  verbose_name = _('information about adding review'))
 
     attachments = models.ManyToManyField('Attachment', null = True, blank = True,
-                                         verbose_name = _('attachments to review'))
+                                         verbose_name = _('attachments'))
 
     def __unicode__(self):
         return '%s (%s) => %s' % (self.author, self.get_authorType_display(), self.mark)
@@ -369,11 +369,11 @@ class StudyCycle(models.Model):
                             verbose_name = _('study cycle name'))
 
     submissionsOpenAt = models.DateField(default=None, null=True, blank=True,
-                                         verbose_name = _('start study date'))
+                                         verbose_name = _('start of submissions'))
     submissionsCloseAt = models.DateField(default=None, null=True, blank=True,
-                                          verbose_name = _('finish study date'))
+                                          verbose_name = _('end of submissions'))
     isLdapSynced = models.BooleanField(default=False,
-                                       verbose_name = _('information thath LDAP is synced'))
+                                       verbose_name = _('is synced with LDAP'))
         
     def __unicode__(self):
         return self.name
@@ -385,7 +385,7 @@ class StudyCycle(models.Model):
 class UserBasedModel(models.Model):
     user = models.OneToOneField(User, verbose_name = _('user'))
     isLdapSynced = models.BooleanField(default=False, 
-                                       verbose_name = _('information thath LDAP is synced'))
+                                       verbose_name = _('is synced with LDAP'))
 
     class Meta:
         abstract = True
@@ -460,7 +460,7 @@ class OrganizationalUnit(models.Model):
     name = models.CharField(max_length = 255,
                             verbose_name = _('organizational unit name'))
     head = models.ForeignKey(Employee, null = True, blank = True,
-                             verbose_name = _('organizational unit head')) # 'null = True' prawdopodonie tymczasowo
+                             verbose_name = _('head of organizational unit')) # 'null = True' prawdopodonie tymczasowo
 
     def __unicode__(self):
         return self.name
