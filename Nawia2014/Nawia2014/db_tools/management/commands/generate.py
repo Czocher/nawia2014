@@ -26,135 +26,157 @@ class Command(BaseCommand):
         self.stdout.write('---------------------------------------------------')
         self.stdout.write('|Rozpoczeto generowanie danych.                   |')
         self.stdout.write('---------------------------------------------------')
-
+        self.stdout.write('generowanie:')
 
         org_units = []
         employees = []
-        tssc = []
+        students = []
+        study_cycles = []
+        thesis_subjects = []
+        autorships = []
 
 
-
-
+        self.stdout.write('jenostki organizacyjne')
         #wygenerowanie jednostek organizacyjnych
         for unitName in gen.organizationalUnitNames:
             # jednostka organizacyjna katedra dziekanat
-            org_unit = nawia.OrganizationalUnit(ldapId=gen.get_random_int(),
+            org_unit = nawia.OrganizationalUnit(ldapId=gen.get_next_int(),
                                                 name=unitName,
                                                 #head=
                                                 )
             org_unit.save()
             org_units.append(org_unit)
 
-        
-        #wygenerowanie puli pracownikow
-        seed = gen.get_random_int()
-
-        for i in range(1, 10):
-            # pracownik uczelni
-            index = seed+i
-            user_emp = User.objects.create_user('user{a}'.format(a=index), 'user@user{a}.com'.format(a=index), 'user')
-            user_emp.save()
-            employee = nawia.Employee(title="prof dr hab",
-                                      user=user_emp,
-                                      #position=,
-                                      organizationalUnit=org_units[0],
-                                      )
-            employee.save()
-            employees.append(employee)
-
-
-
-        '''
-        #wiazanie pracownikow z jednostkami organizacyjnmi
-        emp_count = len(employees)
-        count_emp_in_org_unit = emp_count/len(org_units)
-        employee_counter = 0
+        self.stdout.write('wygenerowanie oraz przypianie pracownikow')
+        #przypisaie danych
+        employees_per_unit = len(employees)/len(org_units)
         for unit in org_units:
-            for i in range(0, count_emp_in_org_unit):
-                employees[employee_counter].organizationalUnit = unit
-                employees[employee_counter].save()
-                employee_counter+=1
+            #wygenerowanie puli pracownikow
+            for i in range(0, employees_per_unit):
+                # pracownik uczelni
+                name, surname, email, username = gen.get_next_user()
+                user_emp = User.objects.create_user(
+                                                    first_name=name,
+                                                    email=email,
+                                                    last_name=surname,
+                                                    username=username
+                                                    )
+                user_emp.save()
+                employee = nawia.Employee(title=gen.get_random_title(),
+                                          user=user_emp,
+                                          #position=,
+                                          organizationalUnit=org_units[unit],
+                                          )
+                employee.save()
+                employees.append(employee)
 
 
-        
-        # zmiana stanu pracy 
-        tssc = nawia.ThesisSubjectStateChange(state=gen.choose_tuple(nawia.ThesisSubjectStateChange.THESIS_SUBJECT_STATE_CHOICES)[0],
-                                               #initiator=,
-                                               comment="jakis comment",
-                                               occuredAt=datetime.date.today()
-                                               )
-        tssc.save()
-
-        
-        
-        # temat pracy
-        thesis_subject = nawia.ThesisSubject(#statesHistory=, # many-to-many sa wykozystywanie dopiero po save() 
-                                             title="wygeneruj mnie",
+        self.stdout.write('tematy prac')
+        #wygenerowanie tematow prac oraz zmian
+        for emp in employees:
+            # zmiana stanu pracy dyplomowej (po jednej losowej zmianie_samego_tematu na temat)
+            tssc = nawia.ThesisSubjectStateChange(state=gen.choose_tuple(nawia.ThesisSubjectStateChange.THESIS_SUBJECT_STATE_CHOICES)[0],
+                                                   #initiator=,
+                                                   comment="jakis wygenerowany comment",
+                                                   occuredAt=datetime.date.today()
+                                                   )
+            tssc.save()
+            # temat pracy
+            thesis_subject = nawia.ThesisSubject(#statesHistory=, # many-to-many sa wykozystywanie dopiero po save() 
+                                             title="wygenerowany temat pracy",
                                              description="bardzo szczegolowy opis",
-                                             teamMembersLimit=gen.get_int(1, 10)[0],
-                                             author=employee.user
+                                             teamMembersLimit=gen.get_rand_int(),
+                                             author=emp.user
                                              )
+            thesis_subject.save()
+            thesis_subject.statesHistory.add(tssc)
+            thesis_subjects.append(thesis_subject)
         
-        thesis_subject.save()
-        thesis_subject.statesHistory.add(tssc)
-
-        '''
-
-
-        
-        
-
-
-        #
-        
-        '''
-        
-        # cykl ksztalcenia 
-        study_cycle = nawia.StudyCycle(ldapId=gen.get_int(),
-                                       name="informatyka, inzynierskie, stacjonarne, 2011Z-2014Z",
+        self.stdout.write('cykle ksztalcenia')
+        #wygeneruj cykle ksztalcenia
+        for cycle in gen.study_cycles:
+            # cykl ksztalcenia 
+            study_cycle = nawia.StudyCycle(ldapId=gen.get_next_int(),
+                                       name=cycle,
                                        submissionsOpenAt = datetime.date.today(),
                                        submissionsCloseAt = datetime.date.today(),
                                        #isLdapSynced=,
                                        )
+            study_cycle.save()
+            study_cycles.append(study_cycle)
 
         
-        #Student
-        student = nawia.Student(#studyCycles=[study_cycle],
-                                )
+        self.stdout.write('wygenerowanie studentow')
+        #wygeneruj pule studentow
+        for student_id in range(0, gen.students_count):
+            name, surname, email, student_username = gen.get_next_user()
+            student_userr = User.objects.create_user(
+                                                    first_name=name,
+                                                    email=email,
+                                                    last_name=surname,
+                                                    username=student_username
+                                                    )
+            student_userr.save()
+            #Student
+            student = nawia.Student(#studyCycles=[study_cycle], #many to many
+                                    user=student_userr
+                                    )
+            student.save()
+            # zawsze jest dodawany pierwszy, jeden i ten sam cykl nauczania (dla prostoty)
+            student.studyCycles.add(study_cycles[0])
+            students.append(student)
+        
 
-       
+        
+
+
+        self.stdout.write('powiazanie studentow z tematami prac')       
         # powiaznie student - temat pracy
-        autorship = nawia.Authorship(state=gen.choose_tuple(nawia.Authorship.AUTHORSHIP_STATE_CHOICES)[0],
-                                     thesisSubject=thesis_subject,
+        i = 0;
+        for ts in thesis_subjects:
+            autorship = nawia.Authorship(state=gen.choose_tuple(nawia.Authorship.AUTHORSHIP_STATE_CHOICES)[0],
+                                     thesisSubject=ts,
                                      comment="autorship comment",
-                                     student=student,
+                                     student=students[i],
                                      createdAt=datetime.date.today(),
                                      updatedAt=datetime.date.today()
                                      )
+            autorship.save()
+            autorships.append(autorship)
+            i++1; # inkrementacja licznika studentow
 
-        
-        #recenzja
-        review = nawia.Review(authorType=gen.choose_tuple(nawia.Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
-                              author=employee,
+        self.stdout.write('losowe recenzje')
+        #wygenerowanie losowych reenzji
+        review_count = len(thesis_subjects)/2 # polowa prac bedzie zrecnzwana
+        for r in range(0, review_count):
+            #recenzja
+            review = nawia.Review(authorType=gen.choose_tuple(nawia.Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
+                              author=employees[r],  #tematow pracy jest tyle ile pracownikow a recenzji polowa tego wiec pierwsza ploowa pracownikow dokona zrecenzowania
                               comment="Review comment",
                               mark=gen.get_grade(),
                               #isDone =,
                               #attachments =,
                               )
+            review.save()
         
+        self.stdout.write('wygenerowanie prac')
+        # wygeneruj tyle prac co powiazan student - temat pracy
+        s = 0;
+        for ash in autorships:
+            # praca dyplomowa
+            thesis = nawia.Thesis(authorship=ash,
+                                  #isDone=,
+                                  #attachments=,
+                                  supervisor=employees[s],
+                                  #auxiliarySupervisors=,
+                                  #advisor=,
+                                  #reviews=review
+                                  )
+            s+=1;
+            thesis.save()
+       
 
-
-        # praca dyplomowa
-        thesis = nawia.Thesis(authorship=autorship,
-                              #isDone=,
-                              #attachments=,
-                              supervisor=employee,
-                              #auxiliarySupervisors=,
-                              #advisor=,
-                              #reviews=review
-                              )
-        
-        
+        self.stdout.write('kryteria pracy dla studenta')
         # kryteria wzgledem pracy dla studntow
         sub_crit = nawia.SubmissionCriterion(type=gen.choose_tuple(nawia.SubmissionCriterion.CRITERION_TYPE_CHOICES)[0],
                                              label="text opisujacy"
@@ -162,26 +184,24 @@ class Command(BaseCommand):
           
 
         
-        #
-        
         # para kryterium odpowiedz 
-        sub_crit_val = nawia.SubmissionCriterionValue(criterion=sub_crit
-                                                          )
-        '''
-         
+       # sub_crit_val = nawia.SubmissionCriterionValue(criterion=sub_crit
+      #                                                    )
+        
+        
 
         
-        
+        self.stdout.write('jenostki zewnetrzne')
         # jednostka zewnetrzna
         org = nawia.Organization(name="organizacja zewnetrzna"
                                  )
 
         
-
+        self.stdout.write('wladze wydzialu')
         # wladze wydzialu
         authority = nawia.Authority(#role=,
                                     )
-        
+        self.stdout.write('koniec.')
         
         self.stdout.write(' ')
         self.stdout.write('---------------------------------------------------')

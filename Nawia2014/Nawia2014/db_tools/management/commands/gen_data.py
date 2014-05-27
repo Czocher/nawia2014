@@ -1,4 +1,3 @@
-
 from random import randint
 import random
 
@@ -10,14 +9,19 @@ class Gen_data(object):
         # wszystkie dane oraz ustawienia generowania
         self.organizationalUnitNames = ("Katedra Informatyki", "Katedra Matematyki")
         self.employees_count = 20;
+        self.students_count = 30;
         self.namesM = ("Adam", "Marcin", "Krzysztof", "Krystian", "Damian", "Dariusz", "Rafal", "Bogumil", "Piotr", "Maciej")
         self.namesF = ("Maria", "Anna", "Ewa", "Julita", "Zaneta", "Agata", "Milena", "Olga", "Kaludia")
         self.surname = ("Nowak", "Kowalski", "Wisniewski", "Dabrowski", "Lewandowski", "Wojcik", "Kaminski", "Kowalczyk",
                         "Zielinski", "Szymanski", "Wozniak", "Kozlowski", "Jankowski", "Wojciechowski", "Kwiatkowski")
         self.grades = (2, 3, 3.5, 4, 4.5, 5)
+        self.study_cycles = ("informatyka, inzynierskie, stacjonarne, 2011Z-2014Z","informatyka, inzynierskie, nie stacjonarne, 2012Z-2014Z",
+                             "matematyka, inzynierskie, stacjonarne, 2011Z-2015Z")
+        self.titles = ("dr", "dr inz", "prof", "prof nzw", "dr hab inz")
 
         # zmienne pomocnicze 
-        unique_users_list = []
+        self.last_int = 0
+        self.unique_users_list = []
 
 
     def get_name(self, count=1):
@@ -33,13 +37,14 @@ class Gen_data(object):
 
 
 
-    def get_new_user(self):
-        u'''Generuje unikalna krotke (name, surname, email).'''
-        
-
-
-
-        return ''
+    def get_next_user(self):
+        u'''Generuje unikalna krotke (name, surname, email, username).'''
+        next_id = self.get_next_int()
+        name_index = next_id % len(self.namesM)
+        surname_index = next_id % len(self.surname)
+        email = "%s@%s%d.com" % (self.namesM[name_index], self.surname[surname_index], next_id)
+        username = "%s_%s_%d" % (self.namesM[name_index], self.surname[surname_index], next_id)
+        return (self.namesM[name_index], self.surname[surname_index], email, username)
 
 
     def get_rand_int_list(self, count, max):
@@ -55,13 +60,25 @@ class Gen_data(object):
         return randint(0, 999999)
 
 
+    def get_next_int(self):
+        u'''Zwraca kolejna niepowtazalna liczbe int.'''
+        self.last_int += 1
+        return self.last_int 
+
+
     def choose_tuple(self, data):
         u''' Wybiera jeden losowy element z krotki.'''
         index = randint(0, len(data)-1)
         return data[index]
 
 
-    def get_grade(self):
+    def get_random_grade(self):
         u'''Pozwala na pobranie losowego stponia (oceny) z zkresu 2-5.'''
         index = randint(0, len(self.grades)-1)
         return self.grades[index]
+
+
+    def get_random_title(self):
+        u'''Pozwala na pobranie losowego tytulu naukowego.'''
+        index = randint(0, len(self.titles)-1)
+        return self.titles[index]
