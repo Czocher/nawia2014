@@ -5,5 +5,36 @@
 {% endblock sidebar %}
 
 {% block content %}
-    <h2>Tematy Przydzielone</h2>
+    <div class="panel panel-default">
+    <!-- Default panel contents -->
+        <div class="panel-heading"><h3>List of assigned thesis topics</h3></div>
+ 
+        <!-- Table -->
+        <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Supervisor</th>
+            <th>Is Done?</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for thesis in topic_list %}
+          <tr>
+            <td>{{ thesis.id }}</td>
+            <td><a href="student/assigned/preview/{{ thesis.id }}">{{ thesis.title }}</a></td>
+            <td>{{ thesis.author }}</td>
+            <td>{{ thesis.supervisor }}</td>
+            {% if thesis.isDone %}
+                <td>Yes</td>
+            {% else %}
+                <td>No</td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
 {% endblock content %}

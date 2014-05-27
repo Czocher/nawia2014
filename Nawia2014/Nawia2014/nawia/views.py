@@ -20,4 +20,7 @@ def help(request):
 
 # strona ustawien konta
 def account(request):
-    return render(request, 'account.html', {})
+    template = loader.get_template('nawia/account.html')
+    context = RequestContext(request, {
+    })
+    return HttpResponse(template.render(context))

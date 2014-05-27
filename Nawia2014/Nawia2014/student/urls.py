@@ -6,7 +6,10 @@ from student.views import Observed
 urlpatterns = patterns('student.views',
     (r'^$', 'home'),
     (r'^home$', 'home'),
+
     (r'^list$', 'list'),
+    (r'^list/preview/(?P<subject_id>[0-9]+)$', 'preview_list'),
+
     (r'^observed$', 'observed'),
     (r'^applied$', 'applied'),
     (r'^assigned$', 'assigned'),
@@ -14,9 +17,8 @@ urlpatterns = patterns('student.views',
     (r'^account$', 'account'),
 
     #pozostawione, do weryfikacji
-    (r'^list$', List.as_view()),
     (r'^list/([\w-]+)/$', ListFiltered.as_view()),
-    (r'^list/preview/(?P<subject_id>[0-9]+)$', 'preview_list'),
+    
     (r'^list/addToObserved/(?P<id>[0-9]+)$', 'addToObserved_list'),
     (r'^list/addToQueue/(?P<id>[0-9]+)$', 'addToQueue_list'),
 
