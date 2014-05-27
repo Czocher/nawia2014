@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+    {% include "nawia/sidebar.html" %}
+{% endblock sidebar %}
+
+{% block content %}
+    <h2>Here you're supposed to see your account information,</h2>
+    <h3>but for that you need to be logged in through LDAP auth system.</h3>
+    <p>Apparently, you're not!</p>
+{% endblock content %}

@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template import RequestContext, loader
@@ -18,13 +19,38 @@ def home(request):
     })
     return HttpResponse(template.render(context))
 
-#TODO: pobrac liste tematow, umiescic ja w kontekscie
 def list(request):
+    topic_list = ThesisSubject.objects.all()
     template = loader.get_template('student/list.html')
     context = RequestContext(request, {
+        'topic_list' : topic_list,
+        'list_title' : ThesisSubject._meta.verbose_name_plural,
+        'title' : ThesisSubject._meta.get_field_by_name('title')[0].verbose_name,
+        'author' : ThesisSubject._meta.get_field_by_name('author')[0].verbose_name,
+        'keywords' : ThesisSubject._meta.get_field_by_name('keywords')[0].verbose_name,
+        'teamMembersLimit' : ThesisSubject._meta.get_field_by_name('teamMembersLimit')[0].verbose_name,
     })
     return HttpResponse(template.render(context))
 
+def preview_list(request, subject_id):
+    #int_id = int(subject_id)
+    try:
+        thesis_subject = ThesisSubject.objects.get(id=subject_id)
+    except ThesisSubject.DoesNotExist:
+        raise Http404
+    context = RequestContext(request, {
+        'subject' : thesis_subject,
+    })
+    return HttpResponse(template.render(context))
+
+def preview_list(request, filter):
+    thesis_subject = ThesisSubject.objects.filter(field_type=field_value)
+    context = RequestContext(request, {
+        'subject' : thesis_subject,
+    })
+    return HttpResponse(template.render(context))
+
+#TODO: models.py - add observed list
 def observed(request):
     template = loader.get_template('student/observed.html')
     context = RequestContext(request, {
@@ -82,16 +108,6 @@ class ListFiltered(ListView):
         list = list.filter(teamMembersLimit__lte="1")
 
         return list 
-
-# podglad tematu pracy
-def preview_list(request, subject_id):
-    int_id = int(subject_id)
-    try:
-        thesis_subject = ThesisSubject.objects.all().get(id=int_id)
-    except ThesisSubject.DoesNotExist:
-        return render(request, 'error.html', {})
-    
-    return render(request, 'stPreview.html', {'thesisSubject':thesis_subject})
     
 # dodanie tematu pracy do Obserwowanych
 def addToObserved_list(request, id):

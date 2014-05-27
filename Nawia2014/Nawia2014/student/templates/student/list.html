@@ -5,10 +5,41 @@
 {% endblock sidebar %}
 
 {% block content %}
-    <h2>Tematy</h2>
-    <ul>
-        {% for thesisSubject in thesisSubjects %}
-            <li>{{ thesisSubject.title }} {{ thesisSubject.description }}</li>
+    <div class="panel panel-default">
+    <!-- Default panel contents -->
+        <div class="panel-heading"><h3>List of thesis topics</h3></div>
+{% if topic_list %}
+        <div class="panel-body">
+            <p>List description</p>
+        </div>
+      
+        <!-- Table -->
+        <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Keywords</th>
+            <th>Students limit</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for thesisSubject in topic_list %}
+          <tr>
+            <td>1</td>
+            <td><a href="student/list/preview/{{thesisSubject.id}}">{{ thesisSubject.title }}</a></td>
+            <td>{{ thesisSubject.author }}</td>
+            <td>{{ thesisSubject.keywords }}</td>
+            <td>{{ thesisSubject.teamMembersLimit }}</td>
+          </tr>
         {% endfor %}
-    </ul>
+        </tbody>
+      </table>
+        {% else %}
+<div class="panel-body">
+            <p>No thesis topics in database.</p>
+        </div>  
+        {% endif %}
+    </div>
 {% endblock content %}

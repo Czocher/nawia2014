@@ -12,8 +12,7 @@
     <InterpreterArguments />
     <DjangoSettingsModule>$(MSBuildProjectName).settings</DjangoSettingsModule>
     <WebBrowserUrl />
-    <WebBrowserPort>
-    </WebBrowserPort>
+    <WebBrowserPort>7756</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -103,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ldapsync\templates\index.html" />
+    <Content Include="nawia\templates\nawia\account.html" />
+    <Content Include="nawia\templates\nawia\help.html" />
     <Content Include="nawia\templates\nawia\home.html" />
     <Content Include="nawia\templates\nawia\sidebar.html" />
     <Content Include="static\img\banner-clouds.png" />
