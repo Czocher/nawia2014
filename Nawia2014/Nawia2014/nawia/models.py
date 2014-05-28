@@ -384,7 +384,7 @@ class StudyCycle(models.Model):
 
 class UserBasedModel(models.Model):
     user = models.OneToOneField(User, verbose_name = _('user'))
-    isLdapSynced = models.BooleanField(default=False, 
+    isLdapSynced = models.BooleanField(default=False, editable=False,
                                        verbose_name = _('is synced with LDAP'))
 
     class Meta:
@@ -416,7 +416,7 @@ class Employee(UserBasedModel):
                                 verbose_name = _('worksite'))
 
     # jednostka organizacyjna (katedra, zakład, itp.), do której należy dany pracownik
-    organizationalUnit = models.ForeignKey('OrganizationalUnit',
+    organizationalUnit = models.ForeignKey('OrganizationalUnit', null = True, blank = True,
                                             verbose_name = _('organizational unit'))
 
     # self.canSupervise : bool
@@ -486,7 +486,7 @@ class Authority(models.Model):
     role = models.CharField(max_length = 2,
                             choices = AUTHORITY_ROLES_CHOICES,
                             verbose_name = _('authority role'))
-    occupant = models.ForeignKey('Employee',
+    occupant = models.ForeignKey('Employee', null = True, blank = True,
                                  verbose_name = _('person occupying the worksite'))
 
     def __unicode__(self):

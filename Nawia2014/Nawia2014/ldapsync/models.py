@@ -160,7 +160,7 @@ class LdapOrganizationalUnit(ldapdb.models.Model):
     def __getEmployees(self):
         scopedModel = LdapOrganizationalMemebersGroup.scoped('%s,%s' % (LDAP_ORGANIZATIONAL_UNIT_EMPLOYEES_NODE, self.dn))
         # pozyskanie grupy pracowników jako listy DN
-        employeesGroup = scopedModel.first()
+        employeesGroup = scopedModel.objects.first()
 
         result = []
         for employeeDn in employeesGroup.members:
