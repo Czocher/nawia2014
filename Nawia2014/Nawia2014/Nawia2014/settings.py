@@ -23,6 +23,8 @@ DATABASES = {
     'ldap': {
         'ENGINE': 'ldapdb.backends.ldap',
         'NAME': 'ldap://ldap.wi.pb.edu.pl:10389/',
+        'USER': 'uid=nawiaagent,ou=agents,ou=FCS,o=BUT,c=pl',
+        'PASSWORD': 'Nawia2014',
     }
 }
 DATABASE_ROUTERS = ['ldapdb.router.Router']
@@ -136,6 +138,9 @@ AUTHENTICATION_BACKENDS = (
 AUTH_LDAP_SERVER_URI = "ldap://ldap.wi.pb.edu.pl:10389"
 AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,ou=FCS,o=BUT,c=pl", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
 AUTH_LDAP_BIND_AS_AUTHENTICATING_USER=True
+
+AUTH_LDAP_BIND_DN = "uid=nawiaagent,ou=agents,ou=FCS,o=BUT,c=pl"
+AUTH_LDAP_BIND_PASSWORD = "Nawia2014"
 
 # sterowanie grupami w aplikacji z LDAP - w naszym przypadku nie jest to używane
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
