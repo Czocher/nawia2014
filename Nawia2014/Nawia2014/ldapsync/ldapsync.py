@@ -7,6 +7,7 @@ from models import LdapStudent, LdapStudyCycle, LdapEmployee, LdapOrganizational
 from models import DoesNotExist as ldapModels_DoesNotExist
 from nawia.models import Student, StudyCycle, Employee, OrganizationalUnit, Organization, Authority
 from collections import namedtuple
+import permissions
 
 class LdapSync:
     u'''
@@ -17,6 +18,7 @@ class LdapSync:
     '''
     @classmethod
     def sync(cls):
+        permissions.prepareForSync()
         cls.__syncStudents()
         cls.__syncStudyCycles()
         cls.__syncEmployees()
@@ -70,6 +72,7 @@ class LdapSync:
             localStudent.user = localUser
             localStudent.isLdapSynced = True
             localStudent.save()
+            permissions.registerStudent(localStudent)
 
     @classmethod
     def __syncStudyCycles(cls):
@@ -155,6 +158,7 @@ class LdapSync:
             localEmployee.position = ldapEmployee.position
             localEmployee.isLdapSynced = True
             localEmployee.save()
+            permissions.registerEmployee(localEmployee)
 
     @classmethod
     def __syncOrganizationalUnits(cls):
@@ -183,6 +187,7 @@ class LdapSync:
             #przypisz kierownika jednostki
             try:
                 localOrganizationalUnit.head = Employee.objects.get(user__username=ldapOrganizationalUnit.head.username)
+                permissions.registerDepartmentHead(localOrganizationalUnit.head)
             except:
                 #może nie być zdefiniowany, wtedy zignoruj wyjątek
                 pass
@@ -240,6 +245,7 @@ class LdapSync:
             localOrganization.name = ldapOrganization.name
             localOrganization.isLdapSynced = True
             localOrganization.save()
+            permissions.registerOrganization(localOrganization)
 
     @classmethod
     def __syncAuthorities(cls):
@@ -288,3 +294,8 @@ class LdapSync:
             #przypisz pracownika pełniącego tę rolę
             localAuthority.occupant = Employee.objects.get(user__username=ldapAuthority.username)
             localAuthority.save()
+
+            if localAuthority.role == Authority.DEAN:
+                permissions.registerFacultyHead(localAuthority.occupant)
+            elif localAuthority.role == Authority.VICE_DEAN_FOR_STUDENTS:
+                permissions.registerFacultyHead(localAuthority.occupant)

@@ -5,12 +5,12 @@ Moduł zapewniający funkcje służące do rejestracji użytkowników w systemie
 
 Moduł jest wykorzystywany w module synchronizującym lokalne modele z systemem LDAP.
 
-Przed rejestrowaniem użytkowników należy wywołać funkcję 'reload()',
+Przed rejestrowaniem użytkowników należy wywołać funkcję 'prepareForSync()',
 która usunie i stworzy na nowo niezbędne obiekty uprawnień oraz grup,
 jednocześnie zrywając wcześniejsze powiązania użytkowników z uprawnieniami.
 '''
 
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext
 from nawia.models import ThesisSubject, Authorship, Review, SubmissionCriterion, SubmissionCriterionValue, Thesis
 from django.contrib.auth.models import Permission, Group
 from django.db.utils import OperationalError
@@ -27,6 +27,9 @@ def clear():
 def reload():
     clear()
     initialize()
+
+def prepareForSync():
+    reload()
 
 def createPermissions():
     u'''
@@ -92,25 +95,32 @@ def registerFacultyHead(employee):
 def registerStudent(student):
     student.user.groups.add(__group(STUDENTS_GROUP))
 
+def registerEmployee(employee):
+    if employee.isDoctorOrAbove:
+        registerDoctor(employee)
+
+def registerOrganization(organization):
+    registerThesisSubjectAuthor(organization.user)
+
+def registerDoctor(employee):
+    u'''
+    Skrót pozwalający nadać użytkownikowi prawa do tworzenia tematów prac, bycia promotorem oraz recenzentem.
+    '''
+    registerThesisSubjectAuthor(employee.user)
+    registerSupervisor(employee)
+    registerReviewer(employee)
+
 def registerThesisSubjectAuthor(user):
     u'''
     Oczekiwany typ parametru to User, ponieważ autor tematów prac może być pracownikiem (Employee) lub podmiotem zewnętrznym (Organization).
     '''
-    employee.user.groups.add(__group(THESIS_SUBJECT_AUTHORS_GROUP))
+    user.groups.add(__group(THESIS_SUBJECT_AUTHORS_GROUP))
 
 def registerReviewer(employee):
     employee.user.groups.add(__group(REVIEWERS_GROUP))
 
 def registerSupervisor(employee):
     employee.user.groups.add(__group(SUPERVISORS_GROUP))
-
-def registerDoctor(employee):
-    u'''
-    Skrót pozwalający nadać użytkownikowi prawa do tworzenia tematów prac, bycia promotorem oraz recenzentem.
-    '''
-    registerThesisSubjectAuthor(employee)
-    registerSupervisor(employee)
-    registerReviewer(employee)
 
 def __permission(key):
     try:
@@ -125,23 +135,23 @@ def __permission(key):
 
 # Słownik uprawnień, gdzie kluczem jest (obiekt kontekstu, nazwa kodowa), a wartością nazwa opisowa.
 __permissions = {
-    (ThesisSubject, 'canCreate'): pgettext_lazy('permission description', 'can create thesis subject'),
-    (ThesisSubject, 'canModify'): pgettext_lazy('permission description', 'can modify thesis subject'),
-    (ThesisSubject, 'canCancel'): pgettext_lazy('permission description', 'can cancel thesis subject'),
-    (ThesisSubject, 'canPublish'): pgettext_lazy('permission description', 'can publish thesis subject'),
-    (ThesisSubject, 'canAccept'): pgettext_lazy('permission description', 'can accept thesis subject'),
-    (ThesisSubject, 'canReject'): pgettext_lazy('permission description', 'can reject thesis subject'),
-    (SubmissionCriterion, 'canDefine'): pgettext_lazy('permission description', 'can define criterion of submission for thesis subject'),
-    (SubmissionCriterionValue, 'canFill'): pgettext_lazy('permission description', 'can fill value of criterion of submission for thesis subject'),
-    (Authorship, 'canAccept'): pgettext_lazy('permission description', 'can accept submission for thesis subject'),
-    (Authorship, 'canReject'): pgettext_lazy('permission description', 'can reject submission for thesis subject'),
-    (Authorship, 'canPropose'): pgettext_lazy('permission description', 'can propose submission for thesis subject'),
-    (Authorship, 'canCancel'): pgettext_lazy('permission description', 'can cancel submission for thesis subject'),
-    (Review, 'canPropose'): pgettext_lazy('permission description', 'can propose reviewer'),
-    (Review, 'canAssign'): pgettext_lazy('permission description', 'can assign reviewer'),
-    (Review, 'canWrite'): pgettext_lazy('permission description', 'can write review'),
-    (Thesis, 'canAccept'): pgettext_lazy('permission description', 'can accept thesis'),
-    (Thesis, 'canCancel'): pgettext_lazy('permission description', 'can cancel thesis'),
+    (ThesisSubject, 'canCreate'): pgettext('permission description', 'can create thesis subject'),
+    (ThesisSubject, 'canModify'): pgettext('permission description', 'can modify thesis subject'),
+    (ThesisSubject, 'canCancel'): pgettext('permission description', 'can cancel thesis subject'),
+    (ThesisSubject, 'canPublish'): pgettext('permission description', 'can publish thesis subject'),
+    (ThesisSubject, 'canAccept'): pgettext('permission description', 'can accept thesis subject'),
+    (ThesisSubject, 'canReject'): pgettext('permission description', 'can reject thesis subject'),
+    (SubmissionCriterion, 'canDefine'): pgettext('permission description', 'can define criterion of submission for thesis subject'),
+    (SubmissionCriterionValue, 'canFill'): pgettext('permission description', 'can fill value of criterion of submission for thesis subject'),
+    (Authorship, 'canAccept'): pgettext('permission description', 'can accept submission for thesis subject'),
+    (Authorship, 'canReject'): pgettext('permission description', 'can reject submission for thesis subject'),
+    (Authorship, 'canPropose'): pgettext('permission description', 'can propose submission for thesis subject'),
+    (Authorship, 'canCancel'): pgettext('permission description', 'can cancel submission for thesis subject'),
+    (Review, 'canPropose'): pgettext('permission description', 'can propose reviewer'),
+    (Review, 'canAssign'): pgettext('permission description', 'can assign reviewer'),
+    (Review, 'canWrite'): pgettext('permission description', 'can write review'),
+    (Thesis, 'canAccept'): pgettext('permission description', 'can accept thesis'),
+    (Thesis, 'canCancel'): pgettext('permission description', 'can cancel thesis'),
 }
 
 def __group(key):
@@ -164,20 +174,20 @@ DEPARTMENT_HEAD_GROUP = 'heads of departments'
 
 # Słownik uprawnień, gdzie kluczem jest nazwa kodowa grupy, a wartością krotka (nazwa grupy, lista uprawnień).
 __groups = {
-    STUDENTS_GROUP: (pgettext_lazy('group name', 'students'), [
+    STUDENTS_GROUP: (pgettext('group name', 'students'), [
                         (SubmissionCriterionValue, 'canFill'),
                         (Authorship, 'canPropose'),
                         (Authorship, 'canCancel'),
                     ]),
-    SUPERVISORS_GROUP: (pgettext_lazy('group name', 'supervisors'), [
+    SUPERVISORS_GROUP: (pgettext('group name', 'supervisors'), [
                             (Review, 'canPropose'),
                             (Thesis, 'canAccept'),
                             (Thesis, 'canCancel'),
                        ]),
-    REVIEWERS_GROUP: (pgettext_lazy('group name', 'reviewers'), [
+    REVIEWERS_GROUP: (pgettext('group name', 'reviewers'), [
                         (Review, 'canWrite'),
                      ]),
-    THESIS_SUBJECT_AUTHORS_GROUP: (pgettext_lazy('group name', 'thesis subject authors'), [
+    THESIS_SUBJECT_AUTHORS_GROUP: (pgettext('group name', 'thesis subject authors'), [
                                         (ThesisSubject, 'canCreate'),
                                         (ThesisSubject, 'canModify'),
                                         (ThesisSubject, 'canCancel'),
@@ -186,12 +196,12 @@ __groups = {
                                         (Authorship, 'canAccept'),
                                         (Authorship, 'canReject'),
                                   ]),
-    FACULTY_HEAD_GROUP: (pgettext_lazy('group name', 'heads of faculty'), [
+    FACULTY_HEAD_GROUP: (pgettext('group name', 'heads of faculty'), [
                             (ThesisSubject, 'canAccept'),
                             (ThesisSubject, 'canReject'),
                             (Review, 'canAssign'),
                         ]),
-    DEPARTMENT_HEAD_GROUP: (pgettext_lazy('group name', 'heads of departments'), [
+    DEPARTMENT_HEAD_GROUP: (pgettext('group name', 'heads of departments'), [
                                 (ThesisSubject, 'canAccept'),
                                 (ThesisSubject, 'canReject'),
                                 (Review, 'canAssign'),

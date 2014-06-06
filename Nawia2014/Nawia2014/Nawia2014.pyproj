@@ -58,7 +58,7 @@
     <Compile Include="Nawia2014\urls.py" />
     <Compile Include="Nawia2014\wsgi.py" />
     <Compile Include="nawia\admin.py" />
-    <Compile Include="nawia\permissions.py" />
+    <Compile Include="ldapsync\permissions.py" />
     <Compile Include="nawia\models.py" />
     <Compile Include="nawia\tests.py" />
     <Compile Include="nawia\urls.py" />
