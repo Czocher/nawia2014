@@ -25,13 +25,13 @@
           </tr>
         </thead>
         <tbody>
-        {% for thesisSubject in topic_list %}
+        {% for thesisTopic in topic_list %}
           <tr>
             <td>1</td>
-            <td><a href="student/list/preview/{{thesisSubject.id}}">{{ thesisSubject.title }}</a></td>
-            <td>{{ thesisSubject.author }}</td>
-            <td>{{ thesisSubject.keywords }}</td>
-            <td>{{ thesisSubject.teamMembersLimit }}</td>
+            <td><a href="student/list/preview/{{thesisTopic.id}}">{{ thesisTopic.title }}</a></td>
+            <td>{{ thesisTopic.author }}</td>
+            <td>{{ thesisTopic.keywords }}</td>
+            <td>{{ thesisTopic.teamMembersLimit }}</td>
           </tr>
         {% endfor %}
         </tbody>

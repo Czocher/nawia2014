@@ -4,9 +4,8 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template import RequestContext, loader
 from django.views.generic import ListView
-from nawia.models import ThesisSubject
-from nawia.models import Authorship
-from nawia.models import ThesisSubjectStateChange
+from topics.models import ThesisTopic, ThesisTopicStateChange
+from authorships.models import Authorship
 
 u"""
 widoki modulu studenta
@@ -20,23 +19,23 @@ def home(request):
     return HttpResponse(template.render(context))
 
 def list(request):
-    topic_list = ThesisSubject.objects.all()
+    topic_list = ThesisTopic.objects.all()
     template = loader.get_template('student/list.html')
     context = RequestContext(request, {
         'topic_list' : topic_list,
-        'list_title' : ThesisSubject._meta.verbose_name_plural,
-        'title' : ThesisSubject._meta.get_field_by_name('title')[0].verbose_name,
-        'author' : ThesisSubject._meta.get_field_by_name('author')[0].verbose_name,
-        'keywords' : ThesisSubject._meta.get_field_by_name('keywords')[0].verbose_name,
-        'teamMembersLimit' : ThesisSubject._meta.get_field_by_name('teamMembersLimit')[0].verbose_name,
+        'list_title' : ThesisTopic._meta.verbose_name_plural,
+        'title' : ThesisTopic._meta.get_field_by_name('title')[0].verbose_name,
+        'author' : ThesisTopic._meta.get_field_by_name('author')[0].verbose_name,
+        'keywords' : ThesisTopic._meta.get_field_by_name('keywords')[0].verbose_name,
+        'coworkersLimit' : ThesisTopic._meta.get_field_by_name('coworkersLimit')[0].verbose_name,
     })
     return HttpResponse(template.render(context))
 
 def preview_list(request, subject_id):
     #int_id = int(subject_id)
     try:
-        thesis_subject = ThesisSubject.objects.get(id=subject_id)
-    except ThesisSubject.DoesNotExist:
+        thesis_subject = ThesisTopic.objects.get(id=subject_id)
+    except ThesisTopic.DoesNotExist:
         raise Http404
     context = RequestContext(request, {
         'subject' : thesis_subject,
@@ -44,7 +43,7 @@ def preview_list(request, subject_id):
     return HttpResponse(template.render(context))
 
 def preview_list(request, filter):
-    thesis_subject = ThesisSubject.objects.filter(field_type=field_value)
+    thesis_subject = ThesisTopic.objects.filter(field_type=field_value)
     context = RequestContext(request, {
         'subject' : thesis_subject,
     })
@@ -79,15 +78,15 @@ def account(request):
 
 # widok listy tematow
 class List(ListView):
-    model = ThesisSubject
-    context_object_name = 'thesisSubjects'
-    template_name = 'stList.html'
+    model = ThesisTopic
+    context_object_name = 'thesisTopics'
+    template_name = 'student/list.html'
 
 # widok przefiltrowanej listy tematow
 class ListFiltered(ListView):
-    model = ThesisSubject
-    context_object_name = 'thesisSubjects'
-    template_name = 'stList.html'
+    model = ThesisTopic
+    context_object_name = 'thesisTopics'
+    template_name = 'student/list.html'
 
     def get_queryset(self):
         #wyciagniecie filtru z urlu
@@ -96,16 +95,16 @@ class ListFiltered(ListView):
         
         # filtrowanie pracy - praca jest opublikowana (mozna sie na nia zglaszac)
         
-        list = ThesisSubject.objects.all().filter(state=ThesisSubjectStateChange.PUBLISHED)   
+        list = ThesisTopic.objects.filter(state__state = ThesisTopicStateChange.PUBLISHED)   
 
         # filtrowanie pracy - po tytule
-        list = list.filter(title__contains="test")  
+        #list = list.filter(title__contains="test")  
         
-        # filtrowanie pracy - po opisie   
-        list = list.filter(description__contains="test")
+        ## filtrowanie pracy - po opisie   
+        #list = list.filter(description__contains="test")
 
-        # filtrowanie pracy - po limicie osob ja piszacych
-        list = list.filter(teamMembersLimit__lte="1")
+        ## filtrowanie pracy - po limicie osob ja piszacych
+        #list = list.filter(coworkersLimit__lte="1")
 
         return list 
     
@@ -123,7 +122,7 @@ def contact(request, id):
 
 # widok listy Obserwowanych
 class Observed(ListView):
-    model = ThesisSubject
+    model = ThesisTopic
     context_object_name = 'observedList'
     template_name = 'stObserved.html'
 
@@ -133,7 +132,7 @@ class Observed(ListView):
 
 # widok przefiltrowanej listy Obserwowanych
 class ObservedFiltered(ListView):
-    model = ThesisSubject
+    model = ThesisTopic
     context_object_name = 'observedList'
     template_name = 'stObserved.html'
 
@@ -141,5 +140,5 @@ class ObservedFiltered(ListView):
         # logika oddzielajaca w stringu pola typu typ, promotor, tytul
         
         # zamiast zwracania wszystkich obiektow, filtrowanie wynikow
-        return ThesisSubject.objects.all() 
+        return ThesisTopic.objects.all() 
 

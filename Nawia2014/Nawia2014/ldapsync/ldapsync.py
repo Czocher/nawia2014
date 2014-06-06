@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from models import LdapStudent, LdapStudyCycle, LdapEmployee, LdapOrganizationalUnit, LdapOrganization, LdapAuthorities
 from models import DoesNotExist as ldapModels_DoesNotExist
-from nawia.models import Student, StudyCycle, Employee, OrganizationalUnit, Organization, Authority
+from faculty.models import Student, StudyCycle, Employee, OrganizationalUnit, Organization, Authority
 from collections import namedtuple
 import permissions
 

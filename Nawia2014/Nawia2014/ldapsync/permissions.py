@@ -11,10 +11,13 @@ jednocześnie zrywając wcześniejsze powiązania użytkowników z uprawnieniami
 '''
 
 from django.utils.translation import pgettext
-from nawia.models import ThesisSubject, Authorship, Review, SubmissionCriterion, SubmissionCriterionValue, Thesis
 from django.contrib.auth.models import Permission, Group
 from django.db.utils import OperationalError
 from django.contrib.contenttypes.models import ContentType
+from topics.models import ThesisTopic
+from authorships.models import SubmissionCriterion, Authorship, SubmissionCriterionValue
+from reviews.models import Review
+from theses.models import Thesis
 
 def initialize():
     createPermissions()
@@ -100,17 +103,17 @@ def registerEmployee(employee):
         registerDoctor(employee)
 
 def registerOrganization(organization):
-    registerThesisSubjectAuthor(organization.user)
+    registerThesisTopicAuthor(organization.user)
 
 def registerDoctor(employee):
     u'''
     Skrót pozwalający nadać użytkownikowi prawa do tworzenia tematów prac, bycia promotorem oraz recenzentem.
     '''
-    registerThesisSubjectAuthor(employee.user)
+    registerThesisTopicAuthor(employee.user)
     registerSupervisor(employee)
     registerReviewer(employee)
 
-def registerThesisSubjectAuthor(user):
+def registerThesisTopicAuthor(user):
     u'''
     Oczekiwany typ parametru to User, ponieważ autor tematów prac może być pracownikiem (Employee) lub podmiotem zewnętrznym (Organization).
     '''
@@ -135,12 +138,12 @@ def __permission(key):
 
 # Słownik uprawnień, gdzie kluczem jest (obiekt kontekstu, nazwa kodowa), a wartością nazwa opisowa.
 __permissions = {
-    (ThesisSubject, 'canCreate'): pgettext('permission description', 'can create thesis subject'),
-    (ThesisSubject, 'canModify'): pgettext('permission description', 'can modify thesis subject'),
-    (ThesisSubject, 'canCancel'): pgettext('permission description', 'can cancel thesis subject'),
-    (ThesisSubject, 'canPublish'): pgettext('permission description', 'can publish thesis subject'),
-    (ThesisSubject, 'canAccept'): pgettext('permission description', 'can accept thesis subject'),
-    (ThesisSubject, 'canReject'): pgettext('permission description', 'can reject thesis subject'),
+    (ThesisTopic, 'canCreate'): pgettext('permission description', 'can create thesis subject'),
+    (ThesisTopic, 'canModify'): pgettext('permission description', 'can modify thesis subject'),
+    (ThesisTopic, 'canCancel'): pgettext('permission description', 'can cancel thesis subject'),
+    (ThesisTopic, 'canPublish'): pgettext('permission description', 'can publish thesis subject'),
+    (ThesisTopic, 'canAccept'): pgettext('permission description', 'can accept thesis subject'),
+    (ThesisTopic, 'canReject'): pgettext('permission description', 'can reject thesis subject'),
     (SubmissionCriterion, 'canDefine'): pgettext('permission description', 'can define criterion of submission for thesis subject'),
     (SubmissionCriterionValue, 'canFill'): pgettext('permission description', 'can fill value of criterion of submission for thesis subject'),
     (Authorship, 'canAccept'): pgettext('permission description', 'can accept submission for thesis subject'),
@@ -188,22 +191,22 @@ __groups = {
                         (Review, 'canWrite'),
                      ]),
     THESIS_SUBJECT_AUTHORS_GROUP: (pgettext('group name', 'thesis subject authors'), [
-                                        (ThesisSubject, 'canCreate'),
-                                        (ThesisSubject, 'canModify'),
-                                        (ThesisSubject, 'canCancel'),
-                                        (ThesisSubject, 'canPublish'),
+                                        (ThesisTopic, 'canCreate'),
+                                        (ThesisTopic, 'canModify'),
+                                        (ThesisTopic, 'canCancel'),
+                                        (ThesisTopic, 'canPublish'),
                                         (SubmissionCriterion, 'canDefine'),
                                         (Authorship, 'canAccept'),
                                         (Authorship, 'canReject'),
                                   ]),
     FACULTY_HEAD_GROUP: (pgettext('group name', 'heads of faculty'), [
-                            (ThesisSubject, 'canAccept'),
-                            (ThesisSubject, 'canReject'),
+                            (ThesisTopic, 'canAccept'),
+                            (ThesisTopic, 'canReject'),
                             (Review, 'canAssign'),
                         ]),
     DEPARTMENT_HEAD_GROUP: (pgettext('group name', 'heads of departments'), [
-                                (ThesisSubject, 'canAccept'),
-                                (ThesisSubject, 'canReject'),
+                                (ThesisTopic, 'canAccept'),
+                                (ThesisTopic, 'canReject'),
                                 (Review, 'canAssign'),
                            ]),
 }

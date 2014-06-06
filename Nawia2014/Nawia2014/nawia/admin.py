@@ -4,6 +4,9 @@ from django.contrib.auth.models import Permission
 
 admin.site.register(Permission)
 
-for model in get_models(get_app('nawia')):
-    admin.site.register(model)
+appNames = ['authorships', 'topics', 'theses', 'reviews', 'faculty']
+
+for appName in appNames:
+    for model in get_models(get_app(appName)):
+        admin.site.register(model)
 
