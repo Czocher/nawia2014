@@ -35,7 +35,7 @@ class Authorship(models.Model):
                              verbose_name = _('Authorship/authorship state'))
 
     thesisTopic = models.ForeignKey(ThesisTopic, related_name = 'authorships',
-                                    verbose_name = _('Authorship/subject of thesis'))
+                                    verbose_name = _('Authorship/thesis topic'))
     student = models.ForeignKey(Student, related_name = 'authorships',
                                 verbose_name = _('Authorship/student'))
     # dodatkowe informacje przekazywane autorowi tematu,
