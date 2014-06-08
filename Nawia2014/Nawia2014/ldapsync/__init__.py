@@ -1,0 +1,2 @@
+import permissions
+permissions.initialize()

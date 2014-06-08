@@ -98,13 +98,8 @@ class ThesisSubjectStateChange(models.Model):
     comment = models.TextField(blank = True, 
                                verbose_name = _('note about thesis subject state'))
 
-    occuredAt = models.DateTimeField(editable = False, null = True, blank = True, 
+    occuredAt = models.DateTimeField(default = timezone.now, editable = False, null = True, blank = True, 
                                      verbose_name = _('happend'))
-
-    def save(self, *args, **kwargs):
-        if self.id == None:
-            self.occuredAt = timezone.now()
-        super(ThesisSubjectStateChange, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return '%s (%s), %s' % (self.get_state_display(), self.occuredAt, self.initiator)
@@ -419,14 +414,17 @@ class Employee(UserBasedModel):
     organizationalUnit = models.ForeignKey('OrganizationalUnit', null = True, blank = True,
                                             verbose_name = _('organizational unit'))
 
+    # self.isDoctorOrAbove : bool
     # self.canSupervise : bool
     # self.canReview : bool
 
     def __getattr__(self, name):
-        if name == 'canSupervise':
+        if name == 'isDoctorOrAbove':
             return 'dr' in self.title
+        elif name == 'canSupervise':
+            return self.isDoctorOrAbove
         elif name == 'canReview':
-            return 'dr' in self.title
+            return self.isDoctorOrAbove
         else:
             raise AttributeError(name)
 
