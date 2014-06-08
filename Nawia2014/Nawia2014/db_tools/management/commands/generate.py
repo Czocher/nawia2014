@@ -50,25 +50,25 @@ class Command(BaseCommand):
         self.stdout.write('wygenerowanie oraz przypianie pracownikow')
         #przypisaie danych
         employees_per_unit = len(employees)/len(org_units)
-        #for unit in org_units:
+        for unit in org_units:
             #wygenerowanie puli pracownikow
-        for i in range(0, 10):
-            # pracownik uczelni
-            name, surname, email, username = gen.get_next_user()
-            user_emp = User.objects.create_user(
-                                                first_name=name,
-                                                email=email,
-                                                last_name=surname,
-                                                username=username
-                                                )
-            user_emp.save()
-            employee = nawia.Employee(title=gen.get_random_title(),
-                                        user=user_emp,
-                                        #position=,
-                                        organizationalUnit=org_units[0],
-                                        )
-            employee.save()
-            employees.append(employee)
+            for i in range(0, employees_per_unit):
+                # pracownik uczelni
+                name, surname, email, username = gen.get_next_user()
+                user_emp = User.objects.create_user(
+                                                    first_name=name,
+                                                    email=email,
+                                                    last_name=surname,
+                                                    username=username
+                                                    )
+                user_emp.save()
+                employee = nawia.Employee(title=gen.get_random_title(),
+                                          user=user_emp,
+                                          #position=,
+                                          organizationalUnit=org_units[unit],
+                                          )
+                employee.save()
+                employees.append(employee)
 
 
         self.stdout.write('tematy prac')
@@ -153,7 +153,7 @@ class Command(BaseCommand):
             review = nawia.Review(authorType=gen.choose_tuple(nawia.Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
                               author=employees[r],  #tematow pracy jest tyle ile pracownikow a recenzji polowa tego wiec pierwsza ploowa pracownikow dokona zrecenzowania
                               comment="Review comment",
-                              mark=gen.get_random_grade(),
+                              mark=gen.get_grade(),
                               #isDone =,
                               #attachments =,
                               )
