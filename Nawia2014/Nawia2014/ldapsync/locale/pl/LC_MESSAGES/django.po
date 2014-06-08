@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-07 11:17+0200\n"
-"PO-Revision-Date: 2014-06-07 11:18+0100\n"
+"POT-Creation-Date: 2014-06-07 12:05+0200\n"
+"PO-Revision-Date: 2014-06-07 12:05+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,33 +19,120 @@ msgstr ""
 "Language: pl\n"
 "X-Generator: Poedit 1.6.5\n"
 
-#: .\models.py:18
-msgid "StateChange/initiator"
-msgstr "inicjator"
+#: .\permissions.py:141
+msgctxt "permission description"
+msgid "can create thesis subject"
+msgstr "może utworzyć temat pracy"
 
-#: .\models.py:21
-msgid "StateChange/comment"
-msgstr "uwagi"
+#: .\permissions.py:142
+msgctxt "permission description"
+msgid "can modify thesis subject"
+msgstr "może zmodyfikować temat pracy"
 
-#: .\models.py:23
-msgid "StateChange/occured at"
-msgstr "data wystąpienia"
+#: .\permissions.py:143
+msgctxt "permission description"
+msgid "can cancel thesis subject"
+msgstr "może unieważnić temat pracy"
 
-#: .\models.py:47
-msgid "Attachment"
-msgstr "załącznik"
+#: .\permissions.py:144
+msgctxt "permission description"
+msgid "can publish thesis subject"
+msgstr "może publikować temat pracy"
 
-#: .\models.py:48
-msgid "Attachments"
-msgstr "załączniki"
+#: .\permissions.py:145
+msgctxt "permission description"
+msgid "can accept thesis subject"
+msgstr "może akceptować temat pracy"
 
-#: .\models.py:50
-msgid "Attachment/name"
-msgstr "nazwa"
+#: .\permissions.py:146
+msgctxt "permission description"
+msgid "can reject thesis subject"
+msgstr "może odrzucić temat pracy"
 
-#: .\models.py:51
-msgid "Attachment/source"
-msgstr "plik"
+#: .\permissions.py:147
+msgctxt "permission description"
+msgid "can define criterion of submission for thesis subject"
+msgstr "może definiować kryterium zapisu na pracę"
+
+#: .\permissions.py:148
+msgctxt "permission description"
+msgid "can fill value of criterion of submission for thesis subject"
+msgstr "może podawać wartości dla zdefiniowanych kryteriów zapisu na pracę"
+
+#: .\permissions.py:149
+msgctxt "permission description"
+msgid "can accept submission for thesis subject"
+msgstr "może akceptować zgłoszenie studenta do tematu"
+
+#: .\permissions.py:150
+msgctxt "permission description"
+msgid "can reject submission for thesis subject"
+msgstr "może odrzucać"
+
+#: .\permissions.py:151
+msgctxt "permission description"
+msgid "can propose submission for thesis subject"
+msgstr "może zgłaszać się na pracę"
+
+#: .\permissions.py:152
+msgctxt "permission description"
+msgid "can cancel submission for thesis subject"
+msgstr "może unieważnić zgłoszenie na pracę"
+
+#: .\permissions.py:153
+msgctxt "permission description"
+msgid "can propose reviewer"
+msgstr "może proponować recenzenta"
+
+#: .\permissions.py:154
+msgctxt "permission description"
+msgid "can assign reviewer"
+msgstr "może przypisać recenzenta"
+
+#: .\permissions.py:155
+msgctxt "permission description"
+msgid "can write review"
+msgstr "może recenzować"
+
+#: .\permissions.py:156
+msgctxt "permission description"
+msgid "can accept thesis"
+msgstr "może zatwierdzać pracę do recenzji"
+
+#: .\permissions.py:157
+msgctxt "permission description"
+msgid "can cancel thesis"
+msgstr "może unieważniać pracę"
+
+#: .\permissions.py:180
+msgctxt "group name"
+msgid "students"
+msgstr "studenci"
+
+#: .\permissions.py:185
+msgctxt "group name"
+msgid "supervisors"
+msgstr "promotorzy"
+
+#: .\permissions.py:190
+msgctxt "group name"
+msgid "reviewers"
+msgstr "recenzenci"
+
+#: .\permissions.py:193
+msgctxt "group name"
+msgid "thesis subject authors"
+msgstr "autorzy tematów prac"
+
+#: .\permissions.py:202
+msgctxt "group name"
+msgid "heads of faculty"
+msgstr "władze wydziału"
+
+#: .\permissions.py:207
+msgctxt "group name"
+msgid "heads of departments"
+msgstr "kierownicy katedr"
 
 #~ msgid "history of states changes"
 #~ msgstr "historia zmian stanów"
@@ -64,6 +151,9 @@ msgstr "plik"
 
 #~ msgid "author of thesis subject"
 #~ msgstr "autor tematu pracy"
+
+#~ msgid "attachments"
+#~ msgstr "załączniki"
 
 #~ msgid "questions for the student who apply to write a given thesis"
 #~ msgstr ""
@@ -193,6 +283,9 @@ msgstr "plik"
 #~ msgid "reviews"
 #~ msgstr "recenzje"
 
+#~ msgid "attachment"
+#~ msgstr "załącznik"
+
 #~ msgid "keyword"
 #~ msgstr "słowo kluczowe"
 
@@ -273,95 +366,3 @@ msgstr "plik"
 
 #~ msgid "authorities"
 #~ msgstr "władze wydziału"
-
-#~ msgctxt "permission description"
-#~ msgid "can create thesis subject"
-#~ msgstr "może utworzyć temat pracy"
-
-#~ msgctxt "permission description"
-#~ msgid "can modify thesis subject"
-#~ msgstr "może zmodyfikować temat pracy"
-
-#~ msgctxt "permission description"
-#~ msgid "can cancel thesis subject"
-#~ msgstr "może unieważnić temat pracy"
-
-#~ msgctxt "permission description"
-#~ msgid "can publish thesis subject"
-#~ msgstr "może publikować temat pracy"
-
-#~ msgctxt "permission description"
-#~ msgid "can accept thesis subject"
-#~ msgstr "może akceptować temat pracy"
-
-#~ msgctxt "permission description"
-#~ msgid "can reject thesis subject"
-#~ msgstr "może odrzucić temat pracy"
-
-#~ msgctxt "permission description"
-#~ msgid "can define criterion of submission for thesis subject"
-#~ msgstr "może definiować kryterium zapisu na pracę"
-
-#~ msgctxt "permission description"
-#~ msgid "can fill value of criterion of submission for thesis subject"
-#~ msgstr "może podawać wartości dla zdefiniowanych kryteriów zapisu na pracę"
-
-#~ msgctxt "permission description"
-#~ msgid "can accept submission for thesis subject"
-#~ msgstr "może akceptować zgłoszenie studenta do tematu"
-
-#~ msgctxt "permission description"
-#~ msgid "can reject submission for thesis subject"
-#~ msgstr "może odrzucać"
-
-#~ msgctxt "permission description"
-#~ msgid "can propose submission for thesis subject"
-#~ msgstr "może zgłaszać się na pracę"
-
-#~ msgctxt "permission description"
-#~ msgid "can cancel submission for thesis subject"
-#~ msgstr "może unieważnić zgłoszenie na pracę"
-
-#~ msgctxt "permission description"
-#~ msgid "can propose reviewer"
-#~ msgstr "może proponować recenzenta"
-
-#~ msgctxt "permission description"
-#~ msgid "can assign reviewer"
-#~ msgstr "może przypisać recenzenta"
-
-#~ msgctxt "permission description"
-#~ msgid "can write review"
-#~ msgstr "może recenzować"
-
-#~ msgctxt "permission description"
-#~ msgid "can accept thesis"
-#~ msgstr "może zatwierdzać pracę do recenzji"
-
-#~ msgctxt "permission description"
-#~ msgid "can cancel thesis"
-#~ msgstr "może unieważniać pracę"
-
-#~ msgctxt "group name"
-#~ msgid "students"
-#~ msgstr "studenci"
-
-#~ msgctxt "group name"
-#~ msgid "supervisors"
-#~ msgstr "promotorzy"
-
-#~ msgctxt "group name"
-#~ msgid "reviewers"
-#~ msgstr "recenzenci"
-
-#~ msgctxt "group name"
-#~ msgid "thesis subject authors"
-#~ msgstr "autorzy tematów prac"
-
-#~ msgctxt "group name"
-#~ msgid "heads of faculty"
-#~ msgstr "władze wydziału"
-
-#~ msgctxt "group name"
-#~ msgid "heads of departments"
-#~ msgstr "kierownicy katedr"

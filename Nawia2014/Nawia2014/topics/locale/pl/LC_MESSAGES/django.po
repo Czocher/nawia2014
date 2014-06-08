@@ -1,0 +1,152 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-07 13:02+0200\n"
+"PO-Revision-Date: 2014-06-07 13:02+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"X-Generator: Poedit 1.6.5\n"
+
+#: .\models.py:17
+msgid "ThesisTopicStateChange"
+msgstr "zmiana stanu tematu pracy"
+
+#: .\models.py:18
+msgid "ThesesTopicsStatesChanges"
+msgstr "zmiany stanów tematów prac"
+
+#: .\models.py:30
+msgid "ThesisTopicState/draft"
+msgstr "wersja robocza"
+
+#: .\models.py:31
+msgid "ThesisTopicState/ready to verify"
+msgstr "oczekujący na weryfikację"
+
+#: .\models.py:32
+msgid "ThesisTopicState/verified by the Head of Department"
+msgstr "zweryfikowany przez kierownika katedry"
+
+#: .\models.py:33
+msgid "ThesisTopicState/accepted by the Head of Faculty"
+msgstr "zatwierdzony przez dziekana"
+
+#: .\models.py:34
+msgid "ThesisTopicState/rejected"
+msgstr "odrzucony"
+
+#: .\models.py:35
+msgid "ThesisTopicState/cancelled"
+msgstr "anulowany"
+
+#: .\models.py:36
+msgid "ThesisTopicState/published"
+msgstr "opublikowany"
+
+#: .\models.py:37
+msgid "ThesisTopicState/assigned"
+msgstr "przypisany studentowi/-om"
+
+#: .\models.py:46
+msgid "StateChange/state"
+msgstr "stan"
+
+#: .\models.py:63
+msgid "Keyword"
+msgstr "słowo kluczowe"
+
+#: .\models.py:64
+msgid "Keywords"
+msgstr "słowa kluczowe"
+
+#: .\models.py:74
+msgid "SubmissionCriterion"
+msgstr "kryterium zgłoszeniowe"
+
+#: .\models.py:75
+msgid "SubmissionsCriteria"
+msgstr "kryteria zgłoszeniowe"
+
+#: .\models.py:81
+msgid "CriterionType/boolean"
+msgstr "wartość logiczna"
+
+#: .\models.py:82
+msgid "CriterionType/integer"
+msgstr "liczba całkowita"
+
+#: .\models.py:83
+msgid "CriterionType/float"
+msgstr "liczba zmiennoprzecinkowa"
+
+#: .\models.py:87
+msgid "SubmissionCriterion/type"
+msgstr "typ"
+
+#: .\models.py:89
+msgid "SubmissionCriterion/label"
+msgstr "nazwa"
+
+#: .\models.py:101
+msgid "ThesisTopic"
+msgstr "temat pracy dyplomowej"
+
+#: .\models.py:102
+msgid "ThesesTopics"
+msgstr "tematy prac dyplomowych"
+
+#: .\models.py:106
+msgid "ThesisTopic/state"
+msgstr "stan"
+
+#: .\models.py:110
+msgid "ThesisTopic/author"
+msgstr "autor"
+
+#: .\models.py:112
+msgid "ThesisTopic/topic"
+msgstr "temat"
+
+#: .\models.py:113
+msgid "ThesisTopic/description"
+msgstr "opis"
+
+#: .\models.py:115
+msgid "ThesisTopic/attachments"
+msgstr "załączniki"
+
+#: .\models.py:118
+msgid "ThesisTopic/keywords"
+msgstr "słowa kluczowe"
+
+#: .\models.py:122
+msgid "ThesisTopic/target study cycles"
+msgstr "docelowe cykle kształcenia"
+
+#: .\models.py:127
+msgid "ThesisTopic/dedication targets"
+msgstr "temat dedykowany dla:"
+
+#: .\models.py:131
+msgid "ThesisTopic/maximal number of coworkers"
+msgstr "liczność grupy przy pracy zespołowej"
+
+#: .\models.py:139
+msgid "ThesisTopic/sumbission criteria"
+msgstr "kryteria zgłoszeniowe"
+
+#: .\models.py:143
+msgid "ThesisTopic/published automatically"
+msgstr "ma być publikowany automatycznie"

@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-07 11:11+0200\n"
+"PO-Revision-Date: 2014-06-07 11:11+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"X-Generator: Poedit 1.6.5\n"
+
+#: .\models.py:18
+msgid "ThesisStateChange"
+msgstr "zmiany stanu pracy"
+
+#: .\models.py:19
+msgid "ThesesStatesChanges"
+msgstr "zmiany stanów prac"
+
+#: .\models.py:36
+msgid "ThesisStateChange/in work"
+msgstr "w trakcie tworzenia"
+
+#: .\models.py:37
+msgid "ThesisStateChange/cancelled"
+msgstr "anulowana"
+
+#: .\models.py:38
+msgid "ThesisStateChange/failed"
+msgstr "niepowodzenie"
+
+#: .\models.py:39
+msgid "ThesisStateChange/finished"
+msgstr "ukończona"
+
+#: .\models.py:40
+msgid "ThesisStateChange/antiplagiarism test passed"
+msgstr "test antyplagiatowy zakończył się pomyślnie"
+
+#: .\models.py:41
+msgid "ThesisStateChange/antiplagiarism test failed"
+msgstr "praca została oznaczona jako plagiat"
+
+#: .\models.py:42
+msgid "ThesisStateChange/ready to be reviewed"
+msgstr "oczekująca na recenzje"
+
+#: .\models.py:43
+msgid "ThesisStateChange/under review"
+msgstr "w trakcie recenzowania"
+
+#: .\models.py:44
+msgid "ThesisStateChange/reviews passed"
+msgstr "otrzymała pozytywne recenzje"
+
+#: .\models.py:45
+msgid "ThesisStateChange/defence ready"
+msgstr "oczekująca na obronę"
+
+#: .\models.py:46
+msgid "ThesisStateChange/under defence"
+msgstr "w trakcie obrony"
+
+#: .\models.py:47
+msgid "ThesisStateChange/defended"
+msgstr "obroniona"
+
+#: .\models.py:48
+msgid "ThesisStateChange/defence failed"
+msgstr "obrona zakończyła się niepowodzeniem"
+
+#: .\models.py:57
+msgid "StateChange/state"
+msgstr "stan"
+
+#: .\models.py:73
+msgid "Thesis"
+msgstr "praca dyplomowa"
+
+#: .\models.py:74
+msgid "Theses"
+msgstr "prace dyplomowe"
+
+#: .\models.py:78
+msgid "ThesisTopic/state"
+msgstr "stan"
+
+#: .\models.py:82
+msgid "Thesis/autorship"
+msgstr "powiązanie studenta z tematem pracy"
+
+#: .\models.py:89
+msgid "Thesis/supervisor"
+msgstr "promotor"
+
+#: .\models.py:93
+msgid "Thesis/auxiliary supervisors"
+msgstr "promotorzy pomocniczy"
+
+#: .\models.py:97
+msgid "Thesis/advisors"
+msgstr "konsultanci"
