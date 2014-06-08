@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+
+u''' @package ldapsync.ldapsync
+Moduł zapewniający funkcje synchronizujące lokalną bazę danych z bazą LDAP i przydzielające uprawnienia użytkownikom.
+
+Podczas synchronizacji dane w bazie powinny zostać uznane za niespójne,
+tzn. serwis powinien być chwilowo niedostępny z zewnątrz.
+
+LdapSync.sync() metoda przeprowadza pełną synchronizację.
+'''
+
 import pytz
 from datetime import datetime
 from django.utils import timezone

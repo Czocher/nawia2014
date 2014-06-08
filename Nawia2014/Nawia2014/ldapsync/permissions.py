@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-u'''
+u'''@package ldapsync.permissions
 Moduł zapewniający funkcje służące do rejestracji użytkowników w systemie przydzielania uprawnień.
 
 Moduł jest wykorzystywany w module synchronizującym lokalne modele z systemem LDAP.
 
-Przed rejestrowaniem użytkowników należy wywołać funkcję 'prepareForSync()',
+Przed rejestrowaniem użytkowników należy wywołać funkcję prepareForSync(),
 która usunie i stworzy na nowo niezbędne obiekty uprawnień oraz grup,
 jednocześnie zrywając wcześniejsze powiązania użytkowników z uprawnieniami.
 '''
@@ -20,6 +20,9 @@ from reviews.models import Review
 from theses.models import Thesis
 
 def initialize():
+    u'''
+    Tworzy (jeśli nie istnieją) obiekty niezbędnych uprawnień i ich grup.
+    '''
     createPermissions()
     createGroups()
 
