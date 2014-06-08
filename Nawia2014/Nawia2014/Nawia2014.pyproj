@@ -36,12 +36,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="authorships\models.py" />
+    <Compile Include="authorships\tests.py" />
+    <Compile Include="authorships\views.py" />
+    <Compile Include="authorships\__init__.py" />
     <Compile Include="db_tools\management\commands\generate.py" />
     <Compile Include="db_tools\management\commands\gen_data.py" />
     <Compile Include="db_tools\management\commands\__init__.py" />
     <Compile Include="db_tools\management\__init__.py" />
     <Compile Include="db_tools\tests.py" />
     <Compile Include="db_tools\__init__.py" />
+    <Compile Include="faculty\models.py" />
+    <Compile Include="faculty\tests.py" />
+    <Compile Include="faculty\views.py" />
+    <Compile Include="faculty\__init__.py" />
     <Compile Include="ldapdb\router.py" />
     <Compile Include="ldapdb\tests.py" />
     <Compile Include="ldapdb\__init__.py" />
@@ -64,11 +72,23 @@
     <Compile Include="nawia\urls.py" />
     <Compile Include="nawia\views.py" />
     <Compile Include="nawia\__init__.py" />
+    <Compile Include="reviews\models.py" />
+    <Compile Include="reviews\tests.py" />
+    <Compile Include="reviews\views.py" />
+    <Compile Include="reviews\__init__.py" />
     <Compile Include="student\models.py" />
     <Compile Include="student\tests.py" />
     <Compile Include="student\urls.py" />
     <Compile Include="student\views.py" />
     <Compile Include="student\__init__.py" />
+    <Compile Include="theses\models.py" />
+    <Compile Include="theses\tests.py" />
+    <Compile Include="theses\views.py" />
+    <Compile Include="theses\__init__.py" />
+    <Compile Include="topics\models.py" />
+    <Compile Include="topics\tests.py" />
+    <Compile Include="topics\views.py" />
+    <Compile Include="topics\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <WebPiReference Include="https://www.microsoft.com/web/webpi/3.0/toolsproductlist.xml%3fDjango">
@@ -83,9 +103,13 @@
     </WebPiReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="authorships\" />
+    <Folder Include="authorships\templates\" />
     <Folder Include="db_tools\" />
     <Folder Include="db_tools\management\" />
     <Folder Include="db_tools\management\commands\" />
+    <Folder Include="faculty\" />
+    <Folder Include="faculty\templates\" />
     <Folder Include="ldapdb\" />
     <Folder Include="ldapsync\" />
     <Folder Include="ldapsync\templates\" />
@@ -93,19 +117,28 @@
     <Folder Include="nawia\" />
     <Folder Include="nawia\templates\" />
     <Folder Include="nawia\templates\nawia\" />
+    <Folder Include="reviews\" />
+    <Folder Include="reviews\templates\" />
     <Folder Include="static\" />
     <Folder Include="static\img\" />
     <Folder Include="student\" />
     <Folder Include="student\templates\" />
     <Folder Include="student\templates\student\" />
     <Folder Include="templates\" />
+    <Folder Include="theses\" />
+    <Folder Include="theses\templates\" />
+    <Folder Include="topics\" />
+    <Folder Include="topics\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="authorships\templates\index.html" />
+    <Content Include="faculty\templates\index.html" />
     <Content Include="ldapsync\templates\index.html" />
     <Content Include="nawia\templates\nawia\account.html" />
     <Content Include="nawia\templates\nawia\help.html" />
     <Content Include="nawia\templates\nawia\home.html" />
     <Content Include="nawia\templates\nawia\sidebar.html" />
+    <Content Include="reviews\templates\index.html" />
     <Content Include="static\img\banner-clouds.png" />
     <Content Include="student\templates\student\applied.html" />
     <Content Include="student\templates\student\assigned.html" />
@@ -116,6 +149,8 @@
     <Content Include="student\templates\student\sidebar.html" />
     <Content Include="templates\base.html" />
     <Content Include="templates\base_topbar.html" />
+    <Content Include="theses\templates\index.html" />
+    <Content Include="topics\templates\index.html" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />

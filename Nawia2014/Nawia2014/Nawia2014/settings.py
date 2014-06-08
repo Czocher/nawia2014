@@ -123,6 +123,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'ldapsync',
     'nawia',
+    'faculty',
+    'reviews',
+    'theses',
+    'topics',
+    'authorships',
     'student',
     'db_tools',
 )
