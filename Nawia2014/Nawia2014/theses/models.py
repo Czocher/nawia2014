@@ -91,10 +91,10 @@ class Thesis(models.Model):
     auxiliarySupervisors = models.ManyToManyField(Employee, null = True, blank = True,
                                                   related_name = 'auxiliarySupervisedTheses',
                                                   verbose_name = _('Thesis/auxiliary supervisors'))
-    # gdy autor tematu jest instutucją zewnętrzną, która nie ma prawa bycia promotorem
-    advisor = models.ForeignKey(Organization, null = True, blank = True,
-                                related_name = 'advisedTheses',                              
-                                verbose_name = _('Thesis/advisor'))
+    # np. gdy autor tematu jest instutucją zewnętrzną, która nie ma prawa bycia promotorem
+    advisors = models.ManyToManyField(Organization, null = True, blank = True,
+                                      related_name = 'advisedTheses',
+                                      verbose_name = _('Thesis/advisors'))
 
     # relacja odwrotna
     # self.reviews : List<Review>

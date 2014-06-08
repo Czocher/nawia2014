@@ -17,18 +17,18 @@ class Review(models.Model):
         verbose_name = _('Review')
         verbose_name_plural = _('Reviews')
 
-    SUPERVISOR = 's'
-    REVIEWER = 'r'
-    AUXILIARY_REVIEWER = 'a'
-    REVIEW_AUTHOR_TYPE_CHOICES = (
-        (SUPERVISOR, 'Review/supervisor'),
-        (REVIEWER, 'Review/reviewer'),
-        (AUXILIARY_REVIEWER, 'Review/auxiliary reviewer'),
+    SUPERVISORS = 's'
+    REVIEWERS = 'r'
+    AUXILIARY_REVIEWERS = 'a'
+    REVIEW_TYPE_CHOICES = (
+        (SUPERVISORS, _('ReviewType/supervisor')),
+        (REVIEWERS, _('ReviewType/reviewer')),
+        (AUXILIARY_REVIEWERS, _('ReviewType/auxiliary reviewer')),
     )
 
-    authorType = models.CharField(max_length = 1,
-                                  choices = REVIEW_AUTHOR_TYPE_CHOICES,
-                                  verbose_name = _('Review/author type'))
+    type = models.CharField(max_length = 1,
+                                  choices = REVIEW_TYPE_CHOICES,
+                                  verbose_name = _('Review/type'))
     author = models.ForeignKey(Employee,
                                verbose_name = _('Review/author'))
     comment = models.TextField(blank = True, verbose_name = _('Review/comment'))

@@ -52,7 +52,7 @@ class UserBasedModel(models.Model):
 
     user = models.OneToOneField(User, verbose_name = _('UserBasedModel/user'))
     isLdapSynced = models.BooleanField(default=False, editable=False,
-                                       verbose_name = _('is synced with LDAP'))
+                                       verbose_name = _('LDAP synced'))
 
 
 class Student(UserBasedModel):
@@ -64,6 +64,10 @@ class Student(UserBasedModel):
     studyCycles = models.ManyToManyField(StudyCycle, null = True, blank = True,
                                          related_name = 'students',
                                          verbose_name = _('Student/study cycles'))
+
+    #observedTopics = models.ManyToManyField(ThesisTopic, null = True, blank = True,
+    #                                        related_name = 'observingStudents',
+    #                                        verbose_name = _('Student/observed topics'))
     
     def __unicode__(self):
         return unicode(self.user.get_full_name())

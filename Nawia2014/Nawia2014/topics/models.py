@@ -78,9 +78,9 @@ class SubmissionCriterion(models.Model):
     INTEGER = 'd'
     FLOAT = 'f'
     CRITERION_TYPE_CHOICES = (
-        (BOOLEAN, 'CriterionType/boolean'),
-        (INTEGER, 'CriterionType/integer'),
-        (FLOAT, 'CriterionType/float'),
+        (BOOLEAN, _('CriterionType/boolean')),
+        (INTEGER, _('CriterionType/integer')),
+        (FLOAT, _('CriterionType/float')),
     )
     type = models.CharField(max_length = 1,
                             choices = CRITERION_TYPE_CHOICES,
