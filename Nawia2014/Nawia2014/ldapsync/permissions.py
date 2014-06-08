@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-u'''@package ldapsync.permissions
+u''' @package ldapsync.permissions
 Moduł zapewniający funkcje służące do rejestracji użytkowników w systemie przydzielania uprawnień.
 
 Moduł jest wykorzystywany w module synchronizującym lokalne modele z systemem LDAP.
@@ -21,20 +21,30 @@ from theses.models import Thesis
 
 def initialize():
     u'''
-    Tworzy (jeśli nie istnieją) obiekty niezbędnych uprawnień i ich grup.
+    Tworzy (jeśli nie istnieją) obiekty używanych przez moduł uprawnień i ich grup.
     '''
     createPermissions()
     createGroups()
 
 def clear():
+    u'''
+    Usuwa (jeśli istnieją) z bazy obiekty używanych przez moduł uprawnień i ich grup.
+    '''
     clearPermissions()
     clearGroups()
 
 def reload():
+    u'''
+    Usuwa i tworzy od nowa używanych przez moduł uprawnień i ich grup.
+    Tym samym w łatwy sposób zrywa powiązania pomiędzy użytkownikami a uprawnieniami i grupami.
+    '''
     clear()
     initialize()
 
 def prepareForSync():
+    u'''
+    Alias do funkcji reload().
+    '''
     reload()
 
 def createPermissions():
@@ -54,7 +64,7 @@ def createPermissions():
 
 def clearPermissions():
     u'''
-    Usuwa z bazy obiekty uprawnień definiowane przez moduł.
+    Usuwa z bazy obiekty uprawnień wykorzystywane przez moduł.
     ''' 
     for key, value in __permissions.iteritems():
         try:
@@ -82,7 +92,7 @@ def createGroups():
 
 def clearGroups():
     u'''
-    Usuwa z bazy obiekty grup definiowane przez moduł.
+    Usuwa z bazy obiekty grup wykorzystywane przez moduł.
     ''' 
     for key, value in __groups.iteritems():
         try:
@@ -92,25 +102,53 @@ def clearGroups():
         except DoesNotExist:
             pass
 
-def registerDepartmentHead(employee):
-    employee.user.groups.add(__group(DEPARTMENT_HEAD_GROUP))
-
-def registerFacultyHead(employee):
-    employee.user.groups.add(__group(FACULTY_HEAD_GROUP))
-
 def registerStudent(student):
+    u'''
+    Rejestruje studenta, przydzielając go do odpowiedniej grupy.
+
+    @param student faculty.models.Student student
+    '''
     student.user.groups.add(__group(STUDENTS_GROUP))
 
 def registerEmployee(employee):
+    u'''
+    Rejestruje pracownika, przydzielając go do odpowiednich grup.
+
+    @param employee faculty.models.Employee pracownik
+    '''
     if employee.isDoctorOrAbove:
         registerDoctor(employee)
 
 def registerOrganization(organization):
+    u'''
+    Rejestruje organizację zewnętrzną, przydzielając jej przedstawiciela do odpowiednich grup.
+
+    @param organization faculty.models.Organization organizacja zewnętrzna
+    '''
     registerThesisTopicAuthor(organization.user)
+
+
+def registerDepartmentHead(employee):
+    u'''
+    Rejestruje pracownika jako kierownika katedry, przydzielając go do odpowiedniej grupy.
+
+    @param employee faculty.models.Employee pracownik mający pełnić rolę kierownika katedry
+    '''
+    employee.user.groups.add(__group(DEPARTMENT_HEAD_GROUP))
+
+def registerFacultyHead(employee):
+    u'''
+    Rejestruje pracownika jako dziekana, przydzielając go do odpowiedniej grupy.
+
+    @param employee faculty.models.Employee pracownik mający pełnić rolę dziekana
+    '''
+    employee.user.groups.add(__group(FACULTY_HEAD_GROUP))
 
 def registerDoctor(employee):
     u'''
     Skrót pozwalający nadać użytkownikowi prawa do tworzenia tematów prac, bycia promotorem oraz recenzentem.
+
+    @param employee faculty.models.Employee pracownik mający tytuł naukowy doktora (co najmniej)
     '''
     registerThesisTopicAuthor(employee.user)
     registerSupervisor(employee)
@@ -118,17 +156,37 @@ def registerDoctor(employee):
 
 def registerThesisTopicAuthor(user):
     u'''
-    Oczekiwany typ parametru to User, ponieważ autor tematów prac może być pracownikiem (Employee) lub podmiotem zewnętrznym (Organization).
+    Rejestruje użytkownika jako twórcę tematów pracy.
+    Oczekiwany typ parametru to User, ponieważ autor tematów prac może być pracownikiem
+    (faculty.models.Employee) lub podmiotem zewnętrznym (faculty.models.Organization).
+    
+    @param user User użytkownik mogący proponować tematy prac
     '''
     user.groups.add(__group(THESIS_SUBJECT_AUTHORS_GROUP))
 
 def registerReviewer(employee):
+    u'''
+    Rejestruje pracownika jako potencjalnego recenzenta.
+    
+    @param employee faculty.models.Employee pracownik mogący być recenzentem
+    '''
     employee.user.groups.add(__group(REVIEWERS_GROUP))
 
 def registerSupervisor(employee):
+    u'''
+    Rejestruje pracownika jako potencjalnego promotora.
+    
+    @param employee faculty.models.Employee pracownik mogący być promotorem
+    '''
     employee.user.groups.add(__group(SUPERVISORS_GROUP))
 
 def __permission(key):
+    u'''
+    Getter obiektu uprawnienia.
+    
+    @param key tuple (obiekt kontekstu, nazwa kodowa)
+    @returns Permission
+    '''
     try:
         contentType = ContentType.objects.get_for_model(key[0])
         permission = Permission.objects.filter(codename = key[1], content_type = contentType)
@@ -139,7 +197,11 @@ def __permission(key):
     except OperationalError:
         return None
 
-# Słownik uprawnień, gdzie kluczem jest (obiekt kontekstu, nazwa kodowa), a wartością nazwa opisowa.
+## Słownik uprawnień, gdzie kluczem jest krotka (obiekt kontekstu, nazwa kodowa), a wartością nazwa opisowa.
+## Niestety wygląda to bardzo nieelegancko, ponieważ 'pgettext' nie występuje w postaci skrótowej
+#  (tzn. może w niej występować, ale wtedy byłaby konieczność napisania własnego parsera na kształt 'makemessages').
+## Niestety nie możemy także wpisać zmiennej albo stałej jako któregokolwiek z parametrów 'pgettext'
+#  (znowu ułomność 'makemessages').
 __permissions = {
     (ThesisTopic, 'canCreate'): pgettext('permission description', 'can create thesis subject'),
     (ThesisTopic, 'canModify'): pgettext('permission description', 'can modify thesis subject'),
@@ -161,6 +223,12 @@ __permissions = {
 }
 
 def __group(key):
+    u'''
+    Getter obiektu grupy.
+    
+    @param key string nazwa grupy
+    @returns Group
+    '''
     try:
         x = unicode(__groups[key][0])
         group = Group.objects.filter(name = x)
@@ -178,7 +246,7 @@ THESIS_SUBJECT_AUTHORS_GROUP = 'thesis subject authors'
 FACULTY_HEAD_GROUP = 'heads of faculty'
 DEPARTMENT_HEAD_GROUP = 'heads of departments'
 
-# Słownik uprawnień, gdzie kluczem jest nazwa kodowa grupy, a wartością krotka (nazwa grupy, lista uprawnień).
+## Słownik uprawnień, gdzie kluczem jest nazwa kodowa grupy, a wartością krotka (nazwa grupy, lista uprawnień).
 __groups = {
     STUDENTS_GROUP: (pgettext('group name', 'students'), [
                         (SubmissionCriterionValue, 'canFill'),
