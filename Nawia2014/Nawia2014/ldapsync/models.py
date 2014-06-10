@@ -1,20 +1,31 @@
 # -*- coding: utf-8 -*-
 
+u''' @package ldapsync.models
+Moduł gromadzący wszystkie modele opisujące dane przechowywane w bazie LDAP.
+
+Modele LdapXxx są wykorzystywane przez moduł ldapsync.ldapsync do synchronizowania
+lokalnej, relacyjnej bazy danych z bazą LDAP.
+'''
+
 from ldapdb.models.fields import (CharField, ImageField, ListField, IntegerField, FloatField)
 from django.db import models
 import ldapdb.models
 import ldap
 
+### Bazowe Distinguished Name dla wszystkich modeli LdapXxx
 LDAP_BASE_DN = 'ou=FCS,o=BUT,c=pl'
+### Nazwa węzła zawierającego kierownika jednostki organizacyjnej
 LDAP_ORGANIZATIONAL_UNIT_HEAD_NODE = 'cn=kierownik'
+### Nazwa węzła zawierającego pracowników jednostki organizacyjnej
 LDAP_ORGANIZATIONAL_UNIT_EMPLOYEES_NODE = 'cn=pracownicy'
 
 class LdapStudent(ldapdb.models.Model):
     u'''
-    Student
+    Reprezentuje studenta zarejestrowanego w bazie LDAP.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     base_dn = "%s,%s" % ('ou=students,ou=people', LDAP_BASE_DN)
+    ### metadane LDAP
     object_classes = ['posixAccount', 'inetOrgPerson']
 
     username = CharField(db_column='uid', primary_key=True)
@@ -30,19 +41,22 @@ class LdapStudent(ldapdb.models.Model):
 
 class LdapOrganization(ldapdb.models.Model):
     u'''
-    Organizacja
+    Reprezentuje organizację zarejestrowaną w bazie LDAP.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     base_dn = "%s,%s" % ('ou=organizations,ou=people', LDAP_BASE_DN)
+    ### metadane LDAP
     object_classes = ['organizationalPerson']
 
     username = CharField(db_column='uid', primary_key=True)
-    # nazwa organizacji
+    ### nazwa organizacji
     name = CharField(db_column='cn')
 
-    # dane osoby reprezentującej organizację
+    ### imię osoby reprezentującej organizację
     representantFirstName = CharField(db_column='givenName')
+    ### nazwisko osoby reprezentującej organizację
     representantLastName = CharField(db_column='sn')
+    ### email osoby reprezentującej organizację
     representantEmail = CharField(db_column='mail')
 
     def __unicode__(self):
@@ -50,10 +64,11 @@ class LdapOrganization(ldapdb.models.Model):
 
 class LdapEmployee(ldapdb.models.Model):
     u'''
-    Pracownik
+    Reprezentuje pracownika zarejestrowanego w bazie LDAP.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     base_dn = "%s,%s" % ('ou=employees,ou=people', LDAP_BASE_DN)
+    ### metadane LDAP
     object_classes = ['organizationalPerson', 'person', 'inetOrgPerson']
 
     username = CharField(db_column='uid', primary_key=True)
@@ -63,20 +78,29 @@ class LdapEmployee(ldapdb.models.Model):
     fullName = CharField(db_column='cn')
     email = CharField(db_column='mail')
 
-    # tytuł naukowy
+    ### tytuł naukowy
     title = CharField(db_column='title')
-    # stanowisko pracy (asystent, adiunkt, itp.)
+    ### stanowisko pracy (asystent, adiunkt, itp.)
     position = CharField(db_column='employeeType')
 
     def __getattr__(self, name):
+        u'''
+        Zapewnia przekierowanie wywołań atrybutu LdapEmployee.organizationalUnit
+        na wywołania metody LdapEmployee.__getOrganizationalUnit().
+        '''
         if name == 'organizationalUnit':
             return self.__getOrganizationalUnit()
         else:
             raise AttributeError(name)
 
     # self.organizationalUnit : LdapOrganizationalUnit
-    # katedra, dziekanat, itp.
     def __getOrganizationalUnit(self):
+        u'''
+        Getter dla atrybutu LdapEmployee.organizationalUnit,
+        zwracający jednostkę organizacyjną tego pracownika (katedra, dziekanat, itp.).
+        Odwoływać się poprzez LdapEmployee.organizationalUnit (nadpisano LdapEmployee.__getattr__()).
+        @returns LdapOrganizationalUnit
+        '''
         result = None
 
         organizationalUnits = LdapOrganizationalUnit.objects.all()
@@ -87,7 +111,7 @@ class LdapEmployee(ldapdb.models.Model):
 
         return result
 
-    # nadpisany operator porównania
+    ### Nadpisany operator porównania.
     def __eq__(self, other):
         # sprawdzanie zgodności 'uid' z LDAPa
         return self.username == other.username
@@ -97,26 +121,35 @@ class LdapEmployee(ldapdb.models.Model):
 
 class LdapStudyCycle(ldapdb.models.Model):
     u'''
-    Cykl ksztalcenia
+    Reprezentuje cykl ksztalcenia zarejestrowany w bazie LDAP.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     base_dn = "%s,%s" % ('ou=studycycles', LDAP_BASE_DN)
+    ### metadane LDAP
     search_scope = ldap.SCOPE_ONELEVEL;
 
     name = CharField(db_column='cn', primary_key=True)
     
-    # lista DN studentów realizujących dany cykl
+    ### lista DN studentów realizujących dany cykl
     studentsDnList = ListField(db_column='member')
 
     def __getattr__(self, name):
+        u'''
+        Zapewnia przekierowanie wywołań atrybutu LdapStudyCycle.students
+        na wywołania metody LdapStudyCycle.getStudents().
+        '''
         if name == 'students':
             return self.getStudents()
         else:
             raise AttributeError(name)
 
     # self.students : Lista<LdapStudent>
-    # lista studentów
     def getStudents(self):
+        u'''
+        Getter dla atrybutu LdapStudyCycle.students, zwracający listę studentów tego cyklu kształcenia.
+        Odwoływać się poprzez LdapStudyCycle.students (nadpisano LdapStudyCycle.__getattr__()).
+        @returns [LdapStudent] lista studentów
+        '''
         result = []
         for studentDn in self.studentsDnList:
             result += LdapStudent.scoped(studentDn).objects.all()
@@ -127,18 +160,25 @@ class LdapStudyCycle(ldapdb.models.Model):
 
 class LdapOrganizationalUnit(ldapdb.models.Model):
     u'''
-    Jednostka organizacyjna
+    Reprezentuje jednostkę organizacyjną zarejestrowaną w bazie LDAP.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     base_dn = "%s,%s" % ('ou=units', LDAP_BASE_DN)
+    ### metadane LDAP
     object_classes = ['organizationalUnit']
+    ### metadane LDAP
     search_scope = ldap.SCOPE_ONELEVEL
 
-    # skrócona nazwa, klucz w LDAP
+    ### skrócona nazwa
     ou = CharField(db_column='ou', primary_key=True)
+    ### klucz w LDAP
     name = CharField(db_column='description')
 
     def __getattr__(self, name):
+        u'''
+        Zapewnia przekierowanie wywołań atrybutów LdapOrganizationalUnit.head i LdapOrganizationalUnit.employees
+        na wywołania metod LdapOrganizationalUnit.__getHead() i LdapOrganizationalUnit.__getEmployees().
+        '''
         if name == 'head':
             return self.__getHead()
         elif name == 'employees':
@@ -147,8 +187,12 @@ class LdapOrganizationalUnit(ldapdb.models.Model):
             raise AttributeError(name)
 
     # self.head : LdapEmployee
-    # kierownik jednostki
     def __getHead(self):
+        u'''
+        Getter dla atrybutu LdapOrganizationalUnit.head, zwracający kierownika tej jednostki organizacyjnej.
+        Odwoływać się poprzez LdapOrganizationalUnit.head (nadpisano LdapOrganizationalUnit.__getattr__()).
+        @returns LdapEmployee kierownik jednostki
+        '''
         headRole = LdapOrganizationalRole.scoped('%s,%s' % (LDAP_ORGANIZATIONAL_UNIT_HEAD_NODE, self.dn)).objects.first()
         if headRole is not None:
             return headRole.occupant
@@ -156,8 +200,12 @@ class LdapOrganizationalUnit(ldapdb.models.Model):
             return None
     
     # self.employees : Lista<LdapEmployee>
-    # pracownicy jednostki
     def __getEmployees(self):
+        u'''
+        Getter dla atrybutu LdapOrganizationalUnit.employees, zwracający listę pracowników tej jednostki organizacyjnej.
+        Odwoływać się poprzez LdapOrganizationalUnit.employees (nadpisano LdapOrganizationalUnit.__getattr__()).
+        @returns [LdapEmployee] pracownicy jednostki
+        '''
         scopedModel = LdapOrganizationalMemebersGroup.scoped('%s,%s' % (LDAP_ORGANIZATIONAL_UNIT_EMPLOYEES_NODE, self.dn))
         # pozyskanie grupy pracowników jako listy DN
         employeesGroup = scopedModel.objects.first()
@@ -173,23 +221,32 @@ class LdapOrganizationalUnit(ldapdb.models.Model):
 
 class LdapOrganizationalRole(ldapdb.models.Model):
     u'''
-    Rola w jednostce organizacyjnej
+    Przypisuje pracownikowi uczelni rolę w jednostce organizacyjnej. Reprezentuje wpis w bazie LDAP.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     object_classes = ['organizationalRole']
 
     name = CharField(db_column='cn', primary_key=True)
     occupantDn = CharField(db_column='roleOccupant')
 
     def __getattr__(self, name):
+        u'''
+        Zapewnia przekierowanie wywołań atrybutu LdapOrganizationalRole.occupant
+        na wywołania metody LdapOrganizationalRole.getOccupant().
+        '''
         if name == 'occupant':
             return self.getOccupant()
         else:
             raise AttributeError(name)
 
     # self.occupant : LdapEmployee
-    # osoba pełniąca daną rolę
     def getOccupant(self):
+        u'''
+        Getter dla atrybutu LdapOrganizationalRole.occupant, zwracający pracownika pełniącego tę rolę
+        w jednostce organizacyjnej.
+        Odwoływać się poprzez LdapOrganizationalRole.occupant (nadpisano LdapOrganizationalRole.__getattr__()).
+        @returns LdapEmployee osoba pełniąca daną rolę
+        '''
         return LdapEmployee.scoped(self.occupantDn).objects.first()
 
     def __unicode__(self):
@@ -197,9 +254,9 @@ class LdapOrganizationalRole(ldapdb.models.Model):
 
 class LdapOrganizationalMemebersGroup(ldapdb.models.Model):
     u'''
-    Członkowie jednostki organizacyjnej
+    Reprezentuje członków jednostki organizacyjnej.
     '''
-    # LDAP meta-data
+    ### metadane LDAP
     object_classes = ['groupOfNames']
 
     name = CharField(db_column='cn', primary_key=True)
@@ -210,19 +267,28 @@ class LdapOrganizationalMemebersGroup(ldapdb.models.Model):
 
 class LdapAuthorities(object):
     u'''
-    Władze wydziału
+    Klasa pomocnicza, pozwalająca pobrać z bazy LDAP dane o jednym z pracowników pełniących rolę władz wydziału.
     '''
 
     base_dn = "%s,%s" % ('ou=authorities', LDAP_BASE_DN)
 
+    ### Nazwa roli w bazie LDAP: Dziekan.
     DEAN = 'dean'
+    ### Nazwa roli w bazie LDAP: Prodziekan ds. Promocji i Współpracy.
     VICE_DEAN_FOR_PROMOTION = 'vice-dean-promotion'
+    ### Nazwa roli w bazie LDAP: Prodziekan ds. Nauki.
     VICE_DEAN_FOR_RESEARCH = 'vice-dean-science'
+    ### Nazwa roli w bazie LDAP: Prodziekan ds. Studenckich i Dydaktyki.
     VICE_DEAN_FOR_STUDENTS = 'vice-dean-students'
 
-    # przedstawiciel władz : LdapEmployee
     @classmethod
     def getAuthority(cls, name):
+        u'''
+        Zwraca przedstawiciela władz wydziału pełniącego daną rolę.
+
+        @param name nazwa roli w bazie LDAP
+        @returns LdapEmployee
+        '''
         scopedModel = LdapOrganizationalRole.scoped('cn=%s,%s' % (name, cls.base_dn))
         role = scopedModel.objects.first()
         if role is not None:
@@ -231,6 +297,9 @@ class LdapAuthorities(object):
             raise DoesNotExist(name)
 
 class DoesNotExist(Exception):
+    u'''
+    Wyjątek wyrzucany wtedy, gdy w bazie LDAP nie odnaleziono szukanego obiektu.
+    '''
     def __init__(self, value):
         self.value = value
     

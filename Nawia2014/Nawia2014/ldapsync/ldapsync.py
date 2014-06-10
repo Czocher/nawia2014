@@ -18,7 +18,6 @@ from django.db.models import Q
 from models import LdapStudent, LdapStudyCycle, LdapEmployee, LdapOrganizationalUnit, LdapOrganization, LdapAuthorities
 from models import DoesNotExist as ldapModels_DoesNotExist
 from faculty.models import Student, StudyCycle, Employee, OrganizationalUnit, Organization, Authority
-from collections import namedtuple
 import permissions
 
 class LdapSync:
@@ -30,10 +29,19 @@ class LdapSync:
     '''
 
     class InstancesCounter:
+        u'''
+        Klasa ułatwiająca zliczanie obiektów utworzonych i zmodyfikowanych
+        w trakcie synchronizacji. Odpowiednik nazwanej krotki (collections.namedtuple),
+        ale ma atrybuty automatycznie zainicjowane zerami.
+        '''
         def __init__(self):
+            ### Licznik obiektów utworzonych.
             self.created = 0
+            ### Licznik obiektów usuniętych.
             self.deleted = 0
+            ### Licznik obiektów oznaczonych jako zsynchronizowane z bazą LDAP.
             self.synced = 0
+            ### Licznik obiektów, które pozostały niezsynchronizowane z bazą LDAP.
             self.nonSynced = 0
 
 
@@ -41,8 +49,12 @@ class LdapSync:
     def sync(cls, logger=None):
         u'''
         Metoda wykonująca wszystkie kroki synchronizacji we właściwej kolejności.
-        Przez parametr 'logger' można przekazać instancję loggera - w przeciwnym razie
-        zostanie użyta domyślna instancja zwracana przez logging.getLogger(__name__).
+
+        @param logger logging.Logger Przez ten parametr można przekazać instancję loggera,
+            która zostanie użyta do wypisania przebiegu procesu. Jeśli logger nie zostanie przekazany,
+            to zostanie użyta domyślna instancja zwracana przez logging.getLogger(__name__).
+            Jeśli instancja ta nie będzie miała przypisanego żadnego handlera, to przypisany
+            zostanie handler typu logging.NullHandler.
         '''
         if not logger:
             logger = logging.getLogger(__name__)
@@ -69,9 +81,9 @@ class LdapSync:
     @classmethod
     def __syncStudents(cls, logger):
         u'''
-        Synchronizuje bazę obiektów Student z zewnętrzną bazą LDAP (modele LdapStudent).
-        Uwaga - zrywane są zależności z klucza obcego Student.studyCycle.
-        Ustawiona flaga Student.isLdapSynced oznacza jedynie, że zsynchronizowane są dane osobowe studenta:
+        Synchronizuje bazę obiektów Student z zewnętrzną bazą LDAP (modele models.LdapStudent).
+        Uwaga - zrywane są zależności z klucza obcego faculty.models.Student.studyCycle.
+        Ustawiona flaga faculty.models.Student.isLdapSynced oznacza jedynie, że zsynchronizowane są dane osobowe studenta:
         imię, nazwisko i email. Pozostałe pola są nullowane, aby przygotować je do następnych
         etapów synchronizacji (jak np. __syncStudyCycles()).
         '''
@@ -137,9 +149,9 @@ class LdapSync:
     @classmethod
     def __syncStudyCycles(cls, logger):
         u'''
-        Synchronizuje bazę obiektów StudyCycle z zewnętrzną bazą LDAP (modele LdapStudyCycle).
+        Synchronizuje bazę obiektów faculty.models.StudyCycle z zewnętrzną bazą LDAP (modele models.LdapStudyCycle).
         Uwaga - wymaga przygotowania obiektów Student: muszą być wcześniej zsynchronizowane z bazą LDAP,
-        a ich referencje na obiekty StudyCycle muszą być wyczyszczone (zostaną odtworzone na tym etapie synchronizacji).
+        a ich referencje na obiekty faculty.models.StudyCycle muszą być wyczyszczone (zostaną odtworzone na tym etapie synchronizacji).
         '''
         studyCyclesCounter = cls.InstancesCounter()
 
@@ -194,9 +206,9 @@ class LdapSync:
     @classmethod
     def __syncEmployees(cls, logger):
         u'''
-        Synchronizuje bazę obiektów Employee z zewnętrzną bazą LDAP (modele LdapEmployee).
-        Uwaga - zrywane są zależności z klucza obcego Employee.organizationalUnit.
-        Ustawiona flaga Employee.isLdapSynced oznacza jedynie, że zsynchronizowane są dane osobowe pracownika:
+        Synchronizuje bazę obiektów faculty.models.Employee z zewnętrzną bazą LDAP (modele models.LdapEmployee).
+        Uwaga - zrywane są zależności z klucza obcego faculty.models.Employee.organizationalUnit.
+        Ustawiona flaga faculty.models.Employee.isLdapSynced oznacza jedynie, że zsynchronizowane są dane osobowe pracownika:
         imię, nazwisko, email, tytuł naukowy i stanowisko. Pozostałe pola są nullowane, aby przygotować je do następnych
         etapów synchronizacji (jak np. __syncOrganizationalUnits()).
         '''
@@ -264,9 +276,11 @@ class LdapSync:
     @classmethod
     def __syncOrganizationalUnits(cls, logger):
         u'''
-        Synchronizuje bazę obiektów OrganizationalUnit z zewnętrzną bazą LDAP (modele LdapOrganizationalUnit).
-        Uwaga - wymaga przygotowania obiektów Employee: muszą być wcześniej zsynchronizowane z bazą LDAP,
-        a ich referencje na obiekty OrganizationalUnit muszą być wyczyszczone (zostaną odtworzone na tym etapie synchronizacji).
+        Synchronizuje bazę obiektów faculty.models.OrganizationalUnit z zewnętrzną bazą LDAP
+        (modele models.LdapOrganizationalUnit).
+        Uwaga - wymaga przygotowania obiektów faculty.models.Employee: muszą być wcześniej zsynchronizowane z bazą LDAP,
+        a ich referencje na obiekty faculty.models.OrganizationalUnit muszą być wyczyszczone
+        (zostaną odtworzone na tym etapie synchronizacji).
         '''
         organizationalUnitsCounter = cls.InstancesCounter()
 
@@ -331,7 +345,7 @@ class LdapSync:
     @classmethod
     def __syncOrganizations(cls, logger):
         u'''
-        Synchronizuje bazę obiektów Organization z zewnętrzną bazą LDAP (modele LdapOrganization).
+        Synchronizuje bazę obiektów faculty.models.Organization z zewnętrzną bazą LDAP (modele models.LdapOrganization).
         '''
         organizationsCounter = cls.InstancesCounter()
         usersCounter = cls.InstancesCounter()
@@ -394,7 +408,7 @@ class LdapSync:
     @classmethod
     def __syncAuthorities(cls, logger):
         u'''
-        Synchronizuje bazę obiektów Authority z zewnętrzną bazą LDAP (klasa pomocnicza LdapAuthorities).
+        Synchronizuje bazę obiektów faculty.models.Authority z zewnętrzną bazą LDAP (klasa pomocnicza models.LdapAuthorities).
         '''
         authoritiesCounter = cls.InstancesCounter()
 
