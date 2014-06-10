@@ -18,7 +18,9 @@ from django.db.models import Q
 from models import LdapStudent, LdapStudyCycle, LdapEmployee, LdapOrganizationalUnit, LdapOrganization, LdapAuthorities
 from models import DoesNotExist as ldapModels_DoesNotExist
 from faculty.models import Student, StudyCycle, Employee, OrganizationalUnit, Organization, Authority
+from collections import namedtuple
 import permissions
+
 
 class LdapSync:
     u'''
