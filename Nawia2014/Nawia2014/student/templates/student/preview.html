@@ -5,6 +5,27 @@
 {% endblock sidebar %}
 
 {% block content %}
-    <h2>Podgl�d tematu</h2>
-    <h3>{{ thesisTopic.title }} {{ thesisTopic.description }}</h3>
+    <div class="row">
+        <div class="col-md-2"><h2><b>Tytuł tematu: </b></h2></div>
+        <div class="col-md-10"><h2>{{ thesis_topic.title }}</h2></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><h5><b>Słowa kluczowe: </b></h5></div>
+        <div class="col-md-10"><h5>{{ thesis_topic.keywords }}</h5></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><h4><b>Autor: </b></h4></div>
+        <div class="col-md-10"><h4>{{ thesis_topic.author }}</h4></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><h4><b>Opis tematu: </b></h4></div>
+        <div class="col-md-10"><h4>{{ thesis_topic.description }}</h4></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><h4><b>Max. liczba osób: </b></h4></div>
+        <div class="col-md-10"><h4>{{ thesis_topic.coworkersLimit }}</h4></div>
+    </div>
+    <br />
+    <a href="/student/list" class="btn btn-default" role="button">Back</a>
+    
 {% endblock %}

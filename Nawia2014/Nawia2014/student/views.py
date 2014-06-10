@@ -19,35 +19,38 @@ def home(request):
     return HttpResponse(template.render(context))
 
 def list(request):
-    topic_list = ThesisTopic.objects.all()
+    topic_list = ThesisTopic.objects.all()#.filter(state__state = ThesisTopicStateChange.PUBLISHED)
     template = loader.get_template('student/list.html')
+
+
     context = RequestContext(request, {
         'topic_list' : topic_list,
-        'list_title' : ThesisTopic._meta.verbose_name_plural,
-        'title' : ThesisTopic._meta.get_field_by_name('title')[0].verbose_name,
-        'author' : ThesisTopic._meta.get_field_by_name('author')[0].verbose_name,
-        'keywords' : ThesisTopic._meta.get_field_by_name('keywords')[0].verbose_name,
-        'coworkersLimit' : ThesisTopic._meta.get_field_by_name('coworkersLimit')[0].verbose_name,
+        #'list_title' : ThesisTopic._meta.verbose_name_plural,
+        #'title' : ThesisTopic._meta.get_field_by_name('title')[0].verbose_name,
+        #'author' : ThesisTopic._meta.get_field_by_name('author')[0].verbose_name,
+        #'keywords' : ThesisTopic._meta.get_field_by_name('keywords')[0].verbose_name,
+        #'coworkersLimit' : ThesisTopic._meta.get_field_by_name('coworkersLimit')[0].verbose_name,
     })
     return HttpResponse(template.render(context))
 
 def preview_list(request, subject_id):
-    #int_id = int(subject_id)
+    int_id = int(subject_id)
     try:
-        thesis_subject = ThesisTopic.objects.get(id=subject_id)
+        thesis_topic = ThesisTopic.objects.get(id=int_id)
     except ThesisTopic.DoesNotExist:
         raise Http404
+    template = loader.get_template('student/preview.html')
     context = RequestContext(request, {
-        'subject' : thesis_subject,
+        'thesis_topic' : thesis_topic,
     })
     return HttpResponse(template.render(context))
 
-def preview_list(request, filter):
-    thesis_subject = ThesisTopic.objects.filter(field_type=field_value)
-    context = RequestContext(request, {
-        'subject' : thesis_subject,
-    })
-    return HttpResponse(template.render(context))
+#def preview_list(request, filter):
+#    thesis_subject = ThesisTopic.objects.filter(field_type=field_value)
+ #   context = RequestContext(request, {
+  #      'subject' : thesis_subject,
+   # })
+    #return HttpResponse(template.render(context))
 
 #TODO: models.py - add observed list
 def observed(request):

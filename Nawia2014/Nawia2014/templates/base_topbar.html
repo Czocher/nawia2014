@@ -5,10 +5,10 @@ ZMIENNE:
 {% load staticfiles %}
 <!--Top bar -->
 <div class="container-fluid">
-    <div class="cover-image">
-        <img src="{% static 'img/banner-clouds.png' %}" class="img-responsive" alt="Clouds banner">
+    <div class="cover-image" >
+        <img src="{% static 'img/banner-clouds.png' %}" class="center-block" alt="Clouds banner">
     </div>
-    <nav class="navbar navbar-inverse" role="navigation">
+    <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -18,7 +18,7 @@ ZMIENNE:
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">NAWIA 1.1</a>
+                <a class="navbar-brand" href="/"><b>NAWIA 1.1</b></a>
                 <p class="navbar-text">
                                 {% if signed %}
                                 Signed in as {% block signed %}The Beetle Conqueror{% endblock %}
