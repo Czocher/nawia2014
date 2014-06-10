@@ -6,23 +6,23 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-2"><h2><b>Tytuł tematu: </b></h2></div>
+        <div class="col-md-2"><h2><b>Title: </b></h2></div>
         <div class="col-md-10"><h2>{{ thesis_topic.title }}</h2></div>
     </div>
     <div class="row">
-        <div class="col-md-2"><h5><b>Słowa kluczowe: </b></h5></div>
-        <div class="col-md-10"><h5>{{ thesis_topic.keywords }}</h5></div>
+        <div class="col-md-2"><h5><b>Keywords: </b></h5></div>
+        <div class="col-md-10"><h5>{% for keywords in thesis_topic.keywords.all %}{{ keywords }} {% endfor %}</h5></div>
     </div>
     <div class="row">
-        <div class="col-md-2"><h4><b>Autor: </b></h4></div>
+        <div class="col-md-2"><h4><b>Author: </b></h4></div>
         <div class="col-md-10"><h4>{{ thesis_topic.author }}</h4></div>
     </div>
     <div class="row">
-        <div class="col-md-2"><h4><b>Opis tematu: </b></h4></div>
+        <div class="col-md-2"><h4><b>Description: </b></h4></div>
         <div class="col-md-10"><h4>{{ thesis_topic.description }}</h4></div>
     </div>
     <div class="row">
-        <div class="col-md-2"><h4><b>Max. liczba osób: </b></h4></div>
+        <div class="col-md-2"><h4><b>Students limit: </b></h4></div>
         <div class="col-md-10"><h4>{{ thesis_topic.coworkersLimit }}</h4></div>
     </div>
     <br />

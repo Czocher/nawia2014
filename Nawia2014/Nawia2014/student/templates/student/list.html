@@ -30,8 +30,8 @@
             <td>1</td>
             <td><a href="list/preview/{{thesisTopic.id}}">{{ thesisTopic.title }}</a></td>
             <td>{{ thesisTopic.author }}</td>
-            <td>{{ thesisTopic.keywords }}</td>
-            <td>{{ thesisTopic.teamMembersLimit }}</td>
+            <td>{% for keywords in thesisTopic.keywords.all %}{{ keywords }} {% endfor %}</td>
+            <td>{{ thesisTopic.coworkersLimit }}</td>
           </tr>
         {% endfor %}
         </tbody>
