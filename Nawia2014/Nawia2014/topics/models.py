@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+u''' @package topics.models
+Moduł gromadzący modele związane z tematami prac dyplomowych.
+'''
+
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -17,15 +21,24 @@ class ThesisTopicStateChange(StateChange):
         verbose_name = _('ThesisTopicStateChange')
         verbose_name_plural = _('ThesesTopicsStatesChanges')
 
+    ### Identyfikator stanu tematu pracy dyplomowej.
     DRAFT = 'dr'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     VERIFICATION_READY = 'vr'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     DEPARTMENT_HEAD_VERIFIED = 'dv'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     FACULTY_HEAD_ACCEPTED = 'fa'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     REJECTED = 'rj'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     CANCELLED = 'cn'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     PUBLISHED = 'pb'
+    ### Identyfikator stanu tematu pracy dyplomowej.
     ASSIGNED = 'as'
 
+    ### Dostępne identyfikatory stanów tematów pracy dyplomowej wraz z tłumaczeniami.
     THESIS_TOPIC_STATE_CHOICES = (
         (DRAFT, _('ThesisTopicState/draft')),
         (VERIFICATION_READY, _('ThesisTopicState/ready to verify')),
@@ -37,20 +50,23 @@ class ThesisTopicStateChange(StateChange):
         (ASSIGNED, _('ThesisTopicState/assigned')),   
     )
 
+    ### Temat pracy dyplomowej, dla którego zaszła zmiana stanu.
     thesisTopic = models.ForeignKey('ThesisTopic', related_name = 'statesHistory',
                                     verbose_name = 'ThesisTopicStateChange/thesis topic')
 
+    ### Nowy stan tematu pracy dyplomowej.
     state = models.CharField(max_length = 2,
                              choices = THESIS_TOPIC_STATE_CHOICES,
                              default = DRAFT,
                              verbose_name = _('StateChange/state'))
 
+    ### Automatycznie ustawia bieżący stan w przypisanym do siebie temacie pracy dyplomowej.
     def save(self, *args, **kwargs):
         # Przy dodawaniu zmiany stanu, ustawiamy dodawany stan jako aktualny do powiązanego tematu pracy.
         if self.id is None:
             self.thesisTopic.state = self
             self.thesisTopic.save()
-        super(Authorship, self).save(*args, **kwargs)
+        super(ThesisTopicStateChange, self).save(*args, **kwargs)
         
 
 class Keyword(models.Model):
@@ -74,17 +90,24 @@ class SubmissionCriterion(models.Model):
         verbose_name = _('SubmissionCriterion')
         verbose_name_plural = _('SubmissionsCriteria')
 
+    ### Identyfikator typu kryterium.
     BOOLEAN = 'b'
+    ### Identyfikator typu kryterium.
     INTEGER = 'd'
+    ### Identyfikator typu kryterium.
     FLOAT = 'f'
+
+    ### Dostępne identyfikatory typów kryteriów wraz z tłumaczeniami.
     CRITERION_TYPE_CHOICES = (
         (BOOLEAN, _('CriterionType/boolean')),
         (INTEGER, _('CriterionType/integer')),
         (FLOAT, _('CriterionType/float')),
     )
+    ### Typ kryterium.
     type = models.CharField(max_length = 1,
                             choices = CRITERION_TYPE_CHOICES,
                             verbose_name = _('SubmissionCriterion/type'))
+    ### Opis kryterium.
     label = models.CharField(max_length = 255,
                              verbose_name = _('SubmissionCriterion/label'))
 
@@ -94,26 +117,27 @@ class SubmissionCriterion(models.Model):
 
 class ThesisTopic(models.Model):
     u'''
-    Temat pracy dyplomowej
+    Temat pracy dyplomowej,
     '''
 
     class Meta:
         verbose_name = _('ThesisTopic')
         verbose_name_plural = _('ThesesTopics')
 
+    ### Stan tematu pracy dyplomowej.
     state = models.ForeignKey(ThesisTopicStateChange, null = True, blank = True,
                               related_name = 'thesisTopicWithNewest',
                               verbose_name = _('ThesisTopic/state'))
 
-    # autor tematu - co najmniej doktor lub firma zewnętrzna
-    # relacja z modelem 'User', ponieważ autor pracy może być klasy 'Employee' lub 'Organization'
+    ### Autor tematu - co najmniej doktor lub firma zewnętrzna.
+    ### Relacja z modelem 'User', ponieważ autor pracy może być klasy 'Employee' lub 'Organization'.
     author = models.ForeignKey(User, verbose_name =_('ThesisTopic/author'))
     title = models.CharField(max_length = 511, 
                              verbose_name =_('ThesisTopic/topic'))
     description = models.TextField(verbose_name=_('ThesisTopic/description'))
     attachments = models.ManyToManyField(Attachment, null = True, blank = True, 
                                          verbose_name = _('ThesisTopic/attachments'))
-    # słowa kluczowe związane z problematyką poruszaną w pracy
+    ### Słowa kluczowe związane z problematyką poruszaną w pracy.
     keywords = models.ManyToManyField(Keyword, null = True, blank = True, 
                                       verbose_name = _('ThesisTopic/keywords'))
 
@@ -121,24 +145,29 @@ class ThesisTopic(models.Model):
                                                related_name = 'thesisTopics',
                                                verbose_name = _('ThesisTopic/target study cycles'))
     
-    # temat dedykowany
+    ### Temat dedykowany?
     isDedicated = models.BooleanField(default = False)
+    ### Osoby, którym dedykowany jest temat.
     dedicationTargets = models.ManyToManyField(Student, null = True, blank = True,
                                                verbose_name =_('ThesisTopic/dedication targets'))
     
-    # praca zespołowa
+    ### Praca zespołowa?
     coworkersLimit = models.PositiveSmallIntegerField(default = 1,
                                                       verbose_name =_('ThesisTopic/maximal number of coworkers'))
 
-    def isTeamwork(self):  # self.isTeamWork : bool
+    def isTeamwork(self):
+        u'''
+        @returns Boolean
+        '''
         return self.coworkersLimit > 1
 
-    # pytania, na które musi odpowiedzieć osoba zgłaszająca chęć pisania pracy na dany temat
-    # na podstawie wartości kryteriów ustalana jest kolejność studentów na liście zainteresowanych
+    ### Pytania, na które musi odpowiedzieć (kryteria, które musi spełnić) osoba zgłaszająca chęć
+    ### pisania pracy na ten temat. Na podstawie wartości kryteriów ustalana jest
+    ### kolejność studentów na liście zainteresowanych.
     criteria = models.ManyToManyField(SubmissionCriterion, null = True, blank = True, 
                                       verbose_name =_('ThesisTopic/sumbission criteria'))
 
-    # flaga określająca czy praca ma zostać opublikowana automatycznie po jej zatwierdzeniu przez wyższe szczeble
+    ### flaga określająca czy praca ma zostać opublikowana automatycznie po jej zatwierdzeniu przez wyższe szczeble
     isAutoPublished = models.BooleanField(default = True, 
                                           verbose_name = _('ThesisTopic/published automatically'))
 

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+u''' @package authorships.models
+Moduł gromadzący wszystkie modele opisujące dane związane z autorstwem prac dyplomowych.
+'''
+
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -12,6 +16,9 @@ class Authorship(models.Model):
     u'''
     Powiązanie studenta z tematem pracy, na który się początkowo zapisuje,
     a następnie (po zaakceptowaniu przez promotora) realizuje.
+
+    Relacje odwrotne:
+    Authorship.criteriaValues : [SubmissionCriterionValue]
     '''
     
     class Meta:
@@ -19,27 +26,35 @@ class Authorship(models.Model):
         verbose_name_plural = _('Authorships')
         ordering = ('updatedAt', )
 
+    ### Identyfikator stanu autorstwa pracy: zaproponowane.
     PROPOSED = 'p'
+    ### Identyfikator stanu autorstwa pracy: zaakceptowane.
     ACCEPTED = 'a'
+    ### Identyfikator stanu autorstwa pracy: odrzucone.
     REJECTED = 'r'
+    ### Identyfikator stanu autorstwa pracy: anulowane.
     CANCELLED = 'c'
+    ### Dostępne identyfikatory stanów autorstwa pracy wraz z tłumaczeniami.
     AUTHORSHIP_STATE_CHOICES = (
         (PROPOSED, _('AuthorshipState/proposed')),
         (ACCEPTED, _('AuthorshipState/accepted')),
         (REJECTED, _('AuthorshipState/rejected')),
         (CANCELLED, _('AuthorshipState/cancelled')),
     )
+    ### Stan autorstwa pracy.
     state = models.CharField(max_length = 1,
                              choices = AUTHORSHIP_STATE_CHOICES,
                              default = PROPOSED,
                              verbose_name = _('Authorship/authorship state'))
 
+    ### Temat pracy.
     thesisTopic = models.ForeignKey(ThesisTopic, related_name = 'authorships',
                                     verbose_name = _('Authorship/thesis topic'))
+    ### Student-autor.
     student = models.ForeignKey(Student, related_name = 'authorships',
                                 verbose_name = _('Authorship/student'))
-    # dodatkowe informacje przekazywane autorowi tematu,
-    # np. uzasadnienie chęci pisania pracy na dany temat lub przypomnienie o odbytej rozmowie
+    ### dodatkowe informacje przekazywane autorowi tematu,
+    ### np. uzasadnienie chęci pisania pracy na dany temat lub przypomnienie o odbytej rozmowie
     comment = models.TextField(blank = True, verbose_name = _('Authorship/comment'))
     
     createdAt = models.DateTimeField(default = timezone.now, editable = False, null = True, blank = True,
@@ -47,10 +62,11 @@ class Authorship(models.Model):
     updatedAt = models.DateTimeField(editable = False, null = True, blank = True,
                                      verbose_name = _('Authorship/date of last modification'))
 
-    # relacja odwrotna
-    # self.criteriaValues : List<SubmissionCriterionValue>
-
+    
     def save(self, *args, **kwargs):
+        u'''
+        Automatycznie wypełnia Authorship.updatedAt.
+        '''
         self.updatedAt = timezone.now()
         super(Authorship, self).save(*args, **kwargs)
 
@@ -75,8 +91,10 @@ class SubmissionCriterionValue(models.Model):
     __value = models.CharField(max_length = 15, db_column = 'value',
                                verbose_name = _('SubmissionCriterionValue/value'))
 
-    # self.value getter
     def __getValue(self):
+        u'''
+        Getter self.value. Odwoływać się przez SubmissionCriterionValue.value.
+        '''
         type = self.criterion.type
         if type == SubmissionCriterion.BOOLEAN:
             return bool(self.__value)
@@ -86,20 +104,30 @@ class SubmissionCriterionValue(models.Model):
             return float(self.__value)
         else:
             return None
-        # alternatywnie
-        # return eval(self.__value)
+        # alternatywnie:
+        # return ast.literal_eval(self.__value)
 
-    # self.value setter
     def __setValue(self, value):
+        u'''
+        Setter self.value. Odwoływać się przez SubmissionCriterionValue.value.
+        '''
         self.__value = repr(value)
 
     def __getattr__(self, name):
+        u'''
+        Zapewnia przekierowanie odczytów atrybutu SubmissionCriterionValue.value
+        na wywołania metody SubmissionCriterionValue.__getValue().
+        '''
         if name == 'value':
             return self.__getValue()
         else:
             raise AttributeError(name)
 
     def __setattr__(self, name, value):
+        u'''
+        Zapewnia przekierowanie zapisów atrybutu SubmissionCriterionValue.value
+        na wywołania metody SubmissionCriterionValue.__setValue().
+        '''
         if name == 'value':
             self.__setValue(value)
         else:

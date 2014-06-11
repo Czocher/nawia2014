@@ -272,13 +272,13 @@ class LdapAuthorities(object):
 
     base_dn = "%s,%s" % ('ou=authorities', LDAP_BASE_DN)
 
-    ### Nazwa roli w bazie LDAP: Dziekan.
+    ### Identyfikator roli w bazie LDAP: Dziekan.
     DEAN = 'dean'
-    ### Nazwa roli w bazie LDAP: Prodziekan ds. Promocji i Współpracy.
+    ### Identyfikator roli w bazie LDAP: Prodziekan ds. Promocji i Współpracy.
     VICE_DEAN_FOR_PROMOTION = 'vice-dean-promotion'
-    ### Nazwa roli w bazie LDAP: Prodziekan ds. Nauki.
+    ### Identyfikator roli w bazie LDAP: Prodziekan ds. Nauki.
     VICE_DEAN_FOR_RESEARCH = 'vice-dean-science'
-    ### Nazwa roli w bazie LDAP: Prodziekan ds. Studenckich i Dydaktyki.
+    ### Identyfikator roli w bazie LDAP: Prodziekan ds. Studenckich i Dydaktyki.
     VICE_DEAN_FOR_STUDENTS = 'vice-dean-students'
 
     @classmethod

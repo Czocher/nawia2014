@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-u'''
-Aplikacja 'faculty' zapewnia szereg modeli odwzorowujących strukturę wydziału.
+u''' @package faculty.models
+Moduł gromadzący modele odwzorowujące strukturę wydziału.
 Modele przystosowane są do synchronizacji z systemem LDAP, zapewnianej przez moduły pochodzące z aplikacji 'ldapsync'.
 '''
 
@@ -15,14 +15,19 @@ from django.utils.translation import ugettext_lazy as _
 class StudyCycle(models.Model):
     u'''
     Cykl kształcenia (np. informatyka, inżynierskie, stacjonarne, 2011Z-2014Z).
+
+    Relacje odwrotne:
+    StudyCycle.students : [Student]
+    StudyCycle.thesisTopics : [ThesisTopic]
     '''
 
     class Meta:
         verbose_name = _('StudyCycle')
         verbose_name_plural = _('StudyCycles')
 
+    ### Identyfiaktor w systemie LDAP.
     ldapId = models.CharField(editable = False, max_length = 255, unique = True)
-
+    ### Nazwa cyklu.
     name = models.CharField(max_length = 255,
                             verbose_name = _('StudyCycle/name'))
 
@@ -31,19 +36,18 @@ class StudyCycle(models.Model):
     submissionsCloseAt = models.DateField(default = None, null = True, blank = True,
                                           verbose_name = _('StudyCycle/end of submissions'))
 
+    ### Określa, czy model został zsynchronizowany z bazą LDAP. Jeśli po synchronizacji ma wartość False,
+    ### to odpowiedniego obiektu nie odnaleziono w bazie LDAP.
     isLdapSynced = models.BooleanField(default = False,
                                        verbose_name = _('LDAP synced'))
-
-    # relacje odwrotne
-    # self.students : List<Student>
-    # self.thesisTopics : List<ThesisTopic>
-        
+    
     def __unicode__(self):
         return self.name
 
 class UserBasedModel(models.Model):
     u'''
-    Abstrakcyjny model zapewniający powiązanie obiektów studenta, pracownika, organizacji zewnętrznej z obiektami django.contrib.auth.models.User.
+    Abstrakcyjny model zapewniający powiązanie obiektów studenta, pracownika, organizacji zewnętrznej
+    z obiektami django.contrib.auth.models.User.
     '''
 
     class Meta:
@@ -51,16 +55,21 @@ class UserBasedModel(models.Model):
         ordering = ('user', )
 
     user = models.OneToOneField(User, verbose_name = _('UserBasedModel/user'))
+    ### Określa, czy model został zsynchronizowany z bazą LDAP. Jeśli po synchronizacji ma wartość False,
+    ### to odpowiedniego obiektu nie odnaleziono w bazie LDAP.
     isLdapSynced = models.BooleanField(default=False, editable=False,
                                        verbose_name = _('LDAP synced'))
 
 
 class Student(UserBasedModel):
+    u'''
+    Student (rozszerzenie modelu django.contrib.auth.models.User).
+    '''
     class Meta:
         verbose_name = _('Student')
         verbose_name_plural = _('Students')
 
-    # jeden student może realizować wiele cykli kształcenia
+    ### Cykle kształcenia przypisane do tego studenta. Jeden student może realizować wiele cykli.
     studyCycles = models.ManyToManyField(StudyCycle, null = True, blank = True,
                                          related_name = 'students',
                                          verbose_name = _('Student/study cycles'))
@@ -75,20 +84,20 @@ class Student(UserBasedModel):
 
 class Employee(UserBasedModel):
     u'''
-    Pracownik uczelni.
+    Pracownik uczelni (rozszerzenie modelu django.contrib.auth.models.User).
     '''
 
     class Meta:
         verbose_name = _('Employee')
         verbose_name_plural = _('Employees')
 
-    # tytuł naukowy
+    ### Tytuł naukowy.
     title = models.CharField(max_length = 255, blank = True,
                              verbose_name = _('Employee/academic title'))
-    # stanowisko pracy (asystent, adiunkt, itp.)
+    ### Stanowisko pracy (asystent, adiunkt, itp.).
     position = models.CharField(max_length = 255, blank = True,
                                 verbose_name = _('Employee/position'))
-    # jednostka organizacyjna (katedra, zakład, itp.), do której należy dany pracownik
+    ### Jednostka organizacyjna (katedra, zakład, itp.), do której należy dany pracownik.
     organizationalUnit = models.ForeignKey('OrganizationalUnit', null = True, blank = True,
                                            related_name = 'employees',
                                            verbose_name = _('Employee/organizational unit'))
@@ -96,8 +105,11 @@ class Employee(UserBasedModel):
     # self.isDoctorOrAbove : bool
     # self.canSupervise : bool
     # self.canReview : bool
-
     def __getattr__(self, name):
+        u'''
+        Zapewnia przekierowanie wywołań atrybutów Employee.isDoctorOrAbove, Employee.canSupervise i Employee.canReview
+        na odpowiednie implementacje.
+        '''
         if name == 'isDoctorOrAbove':
             return 'dr' in self.title
         elif name == 'canSupervise':
@@ -113,7 +125,7 @@ class Employee(UserBasedModel):
 
 class Organization(UserBasedModel):
     u'''
-    Organizacja zewnętrzna (firma, stowarzyszenie, urząd, itp.).
+    Organizacja zewnętrzna (firma, stowarzyszenie, urząd, itp.) - rozszerzenie modelu django.contrib.auth.models.User.
     '''
 
     class Meta:
@@ -130,6 +142,9 @@ class Organization(UserBasedModel):
 class OrganizationalUnit(models.Model):
     u'''
     Jednostka organizacyjna (katedra, dziekanat, itp.).
+    
+    Relacje odwrotne:
+    OrganizationalUnit.employees : [Employees]
     '''
 
     class Meta:
@@ -137,20 +152,19 @@ class OrganizationalUnit(models.Model):
         verbose_name_plural = _('OrganizationalUnits')
         ordering = ('name', )
 
+    ### Identyfiaktor w systemie LDAP.
     ldapId = models.CharField(max_length = 31, unique = True)
 
     name = models.CharField(max_length = 255, verbose_name = _('OrganizationalUnit/name'))
+    ### Kierownik jednostki organizacyjnej.
     head = models.ForeignKey(Employee, null = True, blank = True, verbose_name = _('OrganizationalUnit/head'))
-
-    # relacja odwrotna
-    # self.employees : List<Employees>
 
     def __unicode__(self):
         return self.name
 
 class Authority(models.Model):
     u'''
-    Władze wydziału.
+    Przedstawiciel władz wydziału.
     '''
         
     class Meta:
@@ -158,19 +172,26 @@ class Authority(models.Model):
         verbose_name_plural = _('Authorities')
         ordering = ('role', )
 
+    ### Identyfikator roli przedstawiciela władz wydziału: Dziekan.
     DEAN = 'd'
+    ### Identyfikator roli przedstawiciela władz wydziału: Prodziekan ds. Promocji i Współpracy.
     VICE_DEAN_FOR_PROMOTION = 'pr'
+    ### Identyfikator roli przedstawiciela władz wydziału: Prodziekan ds. Nauki.
     VICE_DEAN_FOR_RESEARCH = 'sc'
+    ### Identyfikator roli przedstawiciela władz wydziału: Prodziekan ds. Studenckich i Dydaktyki.
     VICE_DEAN_FOR_STUDENTS = 'st'
+    ### Dostępne identyfikatory ról przedstawiciela władz wydziału wraz z tłumaczeniami.
     AUTHORITY_ROLES_CHOICES = (
         (DEAN, _('Dean')),
         (VICE_DEAN_FOR_PROMOTION, _('Vice-Dean for Promotion and Cooperation')),
         (VICE_DEAN_FOR_RESEARCH, _('Vice-Dean for Research')),
         (VICE_DEAN_FOR_STUDENTS, _('Vice-Dean for Teaching and Students')),
     )
+    ### Rola przedstawiciela władz wydziału.
     role = models.CharField(max_length = 2,
                             choices = AUTHORITY_ROLES_CHOICES,
                             verbose_name = _('Authority/role'))
+    ### Pracownik pełniący tę rolę.
     occupant = models.ForeignKey(Employee, null = True, blank = True,
                                  verbose_name = _('Authority/occupant'))
 
