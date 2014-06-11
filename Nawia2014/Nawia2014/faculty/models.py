@@ -175,4 +175,4 @@ class Authority(models.Model):
                                  verbose_name = _('Authority/occupant'))
 
     def __unicode__(self):
-        return '%s (%s)' % (self.occupant, self.get_role_display())
+        return u'%s (%s)' % (self.occupant, self.get_role_display())

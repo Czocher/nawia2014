@@ -55,7 +55,7 @@ class Authorship(models.Model):
         super(Authorship, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return '"%s", %s (%s)' % (self.subject, self.student, self.get_state_display())
+        return self.get_state_display()
 
         
 class SubmissionCriterionValue(models.Model):

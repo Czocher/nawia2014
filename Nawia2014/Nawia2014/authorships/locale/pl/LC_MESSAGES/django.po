@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-07 10:54+0200\n"
-"PO-Revision-Date: 2014-06-07 10:55+0100\n"
+"PO-Revision-Date: 2014-06-11 12:35+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr "powiązanie studenta z tematem pracy"
 
 #: .\models.py:19
 msgid "Authorships"
-msgstr "powiązania studentów z tematami prac"
+msgstr "Powiązania studentów z tematami prac"
 
 #: .\models.py:27
 msgid "AuthorshipState/proposed"

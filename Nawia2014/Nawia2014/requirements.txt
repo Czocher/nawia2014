@@ -5,3 +5,4 @@ django-admin-bootstrapped==1.6.3
 django-forms-bootstrap==3.0.0
 django-ckeditor-updated==4.2.8
 Pillow==2.4.0
+django-suit==0.2.8

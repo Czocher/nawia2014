@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-07 11:11+0200\n"
-"PO-Revision-Date: 2014-06-07 11:11+0100\n"
+"PO-Revision-Date: 2014-06-11 12:36+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -89,7 +89,7 @@ msgstr "praca dyplomowa"
 
 #: .\models.py:74
 msgid "Theses"
-msgstr "prace dyplomowe"
+msgstr "Prace dyplomowe"
 
 #: .\models.py:78
 msgid "ThesisTopic/state"

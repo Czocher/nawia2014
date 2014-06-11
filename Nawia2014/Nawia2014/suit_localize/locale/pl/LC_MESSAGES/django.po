@@ -1,0 +1,225 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-11 12:39+0200\n"
+"PO-Revision-Date: 2014-06-11 12:39+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.6.5\n"
+
+#: .\gettext_labels.py:14
+msgid "Faculty"
+msgstr "Struktura wydziału"
+
+#: .\gettext_labels.py:15
+msgid "Topics"
+msgstr "Tematy prac"
+
+#: .\gettext_labels.py:16
+msgid "Sites"
+msgstr "Domeny"
+
+#: .\gettext_labels.py:17
+msgid "Auth"
+msgstr "Autoryzacja"
+
+#: .\templates\admin\app_index.html:8 .\templates\admin\base.html:99
+#: .\templates\admin\change_form.html:61 .\templates\admin\change_list.html:42
+msgid "Home"
+msgstr "Panel główny"
+
+#: .\templates\admin\base.html:66
+msgid "Welcome,"
+msgstr "Witaj,"
+
+#: .\templates\admin\base.html:74
+msgid "Documentation"
+msgstr "Dokumentacja"
+
+#: .\templates\admin\base.html:77
+msgid "Change password"
+msgstr "Zmień hasło"
+
+#: .\templates\admin\base.html:79
+msgid "Log out"
+msgstr "Wyloguj się"
+
+#: .\templates\admin\base.html:180
+msgid "Support"
+msgstr "Wsparcie techniczne"
+
+#: .\templates\admin\base.html:181
+msgid "License"
+msgstr "Licencja"
+
+#: .\templates\admin\base.html:182
+msgid "Report a bug"
+msgstr "Zgłoś błąd"
+
+#: .\templates\admin\change_form.html:21
+msgid "You have unsaved changes"
+msgstr ""
+
+#: .\templates\admin\change_form.html:50 .\templates\admin\change_form.html:80
+#: .\templates\admin\index.html:34
+msgid "Add"
+msgstr "Dodaj"
+
+#: .\templates\admin\change_form.html:102
+msgid "tools"
+msgstr ""
+
+#: .\templates\admin\change_form.html:106
+msgid "History"
+msgstr ""
+
+#: .\templates\admin\change_form.html:111
+msgid "View on site"
+msgstr ""
+
+#: .\templates\admin\change_form.html:117
+#: .\templates\admin\change_list.html:72
+#: .\templates\admin\change_list.html:120
+#, python-format
+msgid "Add %(name)s"
+msgstr "Dodaj %(name)s"
+
+#: .\templates\admin\change_form.html:145
+#: .\templates\admin\change_list.html:90
+msgid "Please correct the error below."
+msgid_plural " Please correct the errors below."
+msgstr[0] "Popraw błąd w poniższym formularzu."
+msgstr[1] "Popraw błędy w poniższym formularzu."
+msgstr[2] "Popraw błędy w poniższym formularzu."
+
+#: .\templates\admin\change_list.html:114
+msgid "Nothing found"
+msgstr "Brak wyników"
+
+#: .\templates\admin\change_list.html:116
+msgid "Reset search and filters"
+msgstr "Zresetuj filtry i wyszukiwarkę"
+
+#: .\templates\admin\change_list.html:118
+#, python-format
+msgid "%(name_plural)s are not created yet"
+msgstr "%(name_plural)s nie zostały jeszcze utworzone"
+
+#: .\templates\admin\index.html:19
+#, python-format
+msgid "Models available in the %(name)s application."
+msgstr "Modele dostępne w aplikacji %(name)s"
+
+#: .\templates\admin\index.html:26
+msgid "Change"
+msgstr "Lista"
+
+#: .\templates\admin\index.html:45
+msgid "You don't have permission to edit anything."
+msgstr "Nie masz uprawnień do edytowania obiektów."
+
+#: .\templates\admin\index.html:54
+msgid "My Actions"
+msgstr "Moje działania"
+
+#: .\templates\admin\index.html:59
+msgid "None available"
+msgstr "Lista jest pusta"
+
+#: .\templates\admin\index.html:68
+msgid "added"
+msgstr "dodano"
+
+#: .\templates\admin\index.html:69
+msgid "changed"
+msgstr "edytowano"
+
+#: .\templates\admin\index.html:70
+msgid "deleted"
+msgstr "usunięto"
+
+#: .\templates\admin\index.html:75
+msgid "Unknown content"
+msgstr "Nieznany obiekt"
+
+#: .\templates\admin\search_form.html:8
+msgid "keyword"
+msgstr "słowa kluczowe"
+
+#: .\templates\admin\search_form.html:26
+msgid "Search"
+msgstr "Szukaj"
+
+#: .\templates\admin\search_form.html:29
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] "%(counter)s wynik"
+msgstr[1] "%(counter)s wyniki"
+msgstr[2] "%(counter)s wyników"
+
+#: .\templates\admin\search_form.html:31
+#, python-format
+msgid "%(full_result_count)s total"
+msgid_plural "%(full_result_count)s total"
+msgstr[0] "%(full_result_count)s element przeszukany"
+msgstr[1] "%(full_result_count)s elementy przeszukane"
+msgstr[2] "%(full_result_count)s elementów przeszukanych"
+
+#: .\templates\admin\submit_line.html:3
+msgid "Send"
+msgstr "Wyślij"
+
+#: .\templates\admin\submit_line.html:3
+msgid "Save"
+msgstr ""
+
+#: .\templates\admin\submit_line.html:4
+msgid "Save and continue editing"
+msgstr ""
+
+#: .\templates\admin\submit_line.html:5
+msgid "Save as new"
+msgstr ""
+
+#: .\templates\admin\submit_line.html:6
+msgid "Send and write another"
+msgstr "Wyślij i utwórz kolejną"
+
+#: .\templates\admin\submit_line.html:6
+msgid "Save and add another"
+msgstr ""
+
+#: .\templates\admin\submit_line.html:8
+msgid "Delete"
+msgstr "Usuń"
+
+#~ msgid "Mainapp"
+#~ msgstr "Serwis"
+
+#~ msgid "Articles"
+#~ msgstr "Artykuły"
+
+#~ msgid "Projects"
+#~ msgstr "Projekty"
+
+#~ msgid "Events"
+#~ msgstr "Wydarzenia"
+
+#~ msgid "Media"
+#~ msgstr "Multimedia"
+
+#~ msgid "Members"
+#~ msgstr "Członkowie"

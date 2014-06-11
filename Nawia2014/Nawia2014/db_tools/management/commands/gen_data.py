@@ -15,9 +15,9 @@ class Gen_data(object):
         self.surname = ("Nowak", "Kowalski", "Wisniewski", "Dabrowski", "Lewandowski", "Wojcik", "Kaminski", "Kowalczyk",
                         "Zielinski", "Szymanski", "Wozniak", "Kozlowski", "Jankowski", "Wojciechowski", "Kwiatkowski")
         self.grades = (2, 3, 3.5, 4, 4.5, 5)
-        self.study_cycles = ("informatyka, inzynierskie, stacjonarne, 2011Z-2014Z","informatyka, inzynierskie, nie stacjonarne, 2012Z-2014Z",
-                             "matematyka, inzynierskie, stacjonarne, 2011Z-2015Z")
-        self.titles = ("dr", "dr inz", "prof", "prof nzw", "dr hab inz")
+        self.study_cycles = (u"informatyka, in¿ynierskie, stacjonarne, 2011Z-2014Z",u"informatyka, in¿ynierskie, niestacjonarne, 2012Z-2014Z",
+                             u"matematyka, in¿ynierskie, stacjonarne, 2011Z-2015Z")
+        self.titles = ("dr", u"dr in¿.", "prof.", "prof. nzw.", u"dr hab. in¿.")
 
         # zmienne pomocnicze 
         self.last_int = 0
@@ -61,7 +61,7 @@ class Gen_data(object):
 
 
     def get_next_int(self):
-        u'''Zwraca kolejna niepowtazalna liczbe int.'''
+        u'''Zwraca kolejna niepowtarzaln¹ liczbe int.'''
         self.last_int += 1
         return self.last_int 
 
@@ -73,7 +73,7 @@ class Gen_data(object):
 
 
     def get_random_grade(self):
-        u'''Pozwala na pobranie losowego stponia (oceny) z zkresu 2-5.'''
+        u'''Pozwala na pobranie losowego stponia (oceny) z zakresu 2-5.'''
         index = randint(0, len(self.grades)-1)
         return self.grades[index]
 

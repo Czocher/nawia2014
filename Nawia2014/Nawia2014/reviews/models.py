@@ -49,4 +49,4 @@ class Review(models.Model):
         return self.document is not None
 
     def __unicode__(self):
-        return '%s (%s)' % (self.author, self.get_authorType_display())
+        return u'%s (%s)' % (self.author, self.get_type_display())

@@ -107,5 +107,6 @@ class Thesis(models.Model):
     def topic(self):
         return self.authorship.thesisTopic
 
-    def __unicode__(self):
-        return '%s, %s' % (self.topic, self.student)
+    #def __unicode__(self):
+    #    return u''#Praca dyplomowa - {}'.format(self.student)
+        #return '%s, %s' % (self.topic.name, self.student)

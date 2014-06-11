@@ -111,6 +111,8 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'suit_localize',
+    'suit',
     'django_forms_bootstrap',
     'django_admin_bootstrapped.bootstrap3',
     'django_admin_bootstrapped',
@@ -189,4 +191,29 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+#Konfiguracja Django Suit (szablon panelu administracyjnego)
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+)
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Admin',
+    'HEADER_DATE_FORMAT': 'l, j E Y',
+    'HEADER_TIME_FORMAT': 'H:i',
+    'SEARCH_URL': '',
+    'MENU_OPEN_FIRST_CHILD': False,
+    'MENU': (
+        '-',
+        {'app': 'auth'},
+        {'app': 'sites'},
+        '-',
+        {'app': 'faculty'},
+        {'app': 'topics'},
+        {'app': 'authorships'},
+        {'app': 'theses'},
+        {'app': 'reviews'},
+    ),
 }

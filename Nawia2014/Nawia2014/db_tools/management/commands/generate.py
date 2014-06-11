@@ -6,7 +6,7 @@ from db_tools.management.commands import gen_data
 import datetime
 from django.contrib.auth.models import User
 from django.core.management import call_command
-from faculty.models import Employee, StudyCycle, Student, Organization, Authority
+from faculty.models import Employee, StudyCycle, Student, Organization, Authority, OrganizationalUnit
 from topics.models import ThesisTopicStateChange, ThesisTopic
 from authorships.models import Authorship, SubmissionCriterion
 from reviews.models import Review
@@ -45,7 +45,7 @@ class Command(BaseCommand):
         #wygenerowanie jednostek organizacyjnych
         for unitName in gen.organizationalUnitNames:
             # jednostka organizacyjna katedra dziekanat
-            org_unit = nawia.OrganizationalUnit(ldapId=gen.get_next_int(),
+            org_unit = OrganizationalUnit(ldapId=gen.get_next_int(),
                                                 name=unitName,
                                                 #head=
                                                 )
@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
         self.stdout.write('wygenerowanie oraz przypianie pracownikow')
         #przypisaie danych
-        employees_per_unit = len(employees)/len(org_units)
+        employees_per_unit = len(employees)/len(org_units) 
         for unit in org_units:
             #wygenerowanie puli pracownikow
             for i in range(0, employees_per_unit):
@@ -80,7 +80,7 @@ class Command(BaseCommand):
         #wygenerowanie tematow prac oraz zmian
         for emp in employees:
             # zmiana stanu pracy dyplomowej (po jednej losowej zmianie_samego_tematu na temat)
-            tssc = ThesisTopicStateChange(state=gen.choose_tuple(nawia.ThesisTopicStateChange.THESIS_SUBJECT_STATE_CHOICES)[0],
+            tssc = ThesisTopicStateChange(state=gen.choose_tuple(ThesisTopicStateChange.THESIS_SUBJECT_STATE_CHOICES)[0],
                                                    #initiator=,
                                                    comment="jakis wygenerowany comment",
                                                    occuredAt=datetime.date.today()
@@ -139,7 +139,7 @@ class Command(BaseCommand):
         # powiaznie student - temat pracy
         i = 0;
         for ts in thesis_subjects:
-            autorship = Authorship(state=gen.choose_tuple(nawia.Authorship.AUTHORSHIP_STATE_CHOICES)[0],
+            autorship = Authorship(state=gen.choose_tuple(Authorship.AUTHORSHIP_STATE_CHOICES)[0],
                                      thesisTopic=ts,
                                      comment="autorship comment",
                                      student=students[i],
@@ -155,7 +155,7 @@ class Command(BaseCommand):
         review_count = len(thesis_subjects)/2 # polowa prac bedzie zrecnzwana
         for r in range(0, review_count):
             #recenzja
-            review = Review(authorType=gen.choose_tuple(nawia.Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
+            review = Review(authorType=gen.choose_tuple(Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
                               author=employees[r],  #tematow pracy jest tyle ile pracownikow a recenzji polowa tego wiec pierwsza ploowa pracownikow dokona zrecenzowania
                               comment="Review comment",
                               mark=gen.get_grade(),
@@ -183,7 +183,7 @@ class Command(BaseCommand):
 
         self.stdout.write('kryteria pracy dla studenta')
         # kryteria wzgledem pracy dla studntow
-        sub_crit = SubmissionCriterion(type=gen.choose_tuple(nawia.SubmissionCriterion.CRITERION_TYPE_CHOICES)[0],
+        sub_crit = SubmissionCriterion(type=gen.choose_tuple(SubmissionCriterion.CRITERION_TYPE_CHOICES)[0],
                                              label="text opisujacy"
                                             )
           
