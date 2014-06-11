@@ -55,6 +55,9 @@
     <Compile Include="ldapdb\__init__.py" />
     <Compile Include="ldapsync\admin.py" />
     <Compile Include="ldapsync\ldapsync.py" />
+    <Compile Include="ldapsync\management\commands\syncldap.py" />
+    <Compile Include="ldapsync\management\commands\__init__.py" />
+    <Compile Include="ldapsync\management\__init__.py" />
     <Compile Include="ldapsync\models.py" />
     <Compile Include="ldapsync\tests.py" />
     <Compile Include="ldapsync\urls.py" />
@@ -112,6 +115,8 @@
     <Folder Include="faculty\templates\" />
     <Folder Include="ldapdb\" />
     <Folder Include="ldapsync\" />
+    <Folder Include="ldapsync\management\" />
+    <Folder Include="ldapsync\management\commands\" />
     <Folder Include="ldapsync\templates\" />
     <Folder Include="Nawia2014\" />
     <Folder Include="nawia\" />
