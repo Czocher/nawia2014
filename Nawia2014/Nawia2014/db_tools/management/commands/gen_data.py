@@ -15,7 +15,7 @@ class Gen_data(object):
         self.surname = ("Nowak", "Kowalski", "Wisniewski", "Dabrowski", "Lewandowski", "Wojcik", "Kaminski", "Kowalczyk",
                         "Zielinski", "Szymanski", "Wozniak", "Kozlowski", "Jankowski", "Wojciechowski", "Kwiatkowski")
         self.grades = (2, 3, 3.5, 4, 4.5, 5)
-        self.study_cycles = ("informatyka, inzynierskie, stacjonarne, 2011Z-2014Z","informatyka, inzynierskie, niestacjonarne, 2012Z-2014Z",
+        self.study_cycles = ("informatyka, inzynierskie, stacjonarne, 2011Z-2014Z","informatyka, inzynierskie, nie stacjonarne, 2012Z-2014Z",
                              "matematyka, inzynierskie, stacjonarne, 2011Z-2015Z")
         self.titles = ("dr", "dr inz", "prof", "prof nzw", "dr hab inz")
 
