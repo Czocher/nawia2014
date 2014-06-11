@@ -6,6 +6,11 @@ from db_tools.management.commands import gen_data
 import datetime
 from django.contrib.auth.models import User
 from django.core.management import call_command
+from faculty.models import Employee, StudyCycle, Student, Organization, Authority
+from topics.models import ThesisTopicStateChange, ThesisTopic
+from authorships.models import Authorship, SubmissionCriterion
+from reviews.models import Review
+from theses.models import Thesis
 
 
 
@@ -50,39 +55,39 @@ class Command(BaseCommand):
         self.stdout.write('wygenerowanie oraz przypianie pracownikow')
         #przypisaie danych
         employees_per_unit = len(employees)/len(org_units)
-        #for unit in org_units:
+        for unit in org_units:
             #wygenerowanie puli pracownikow
-        for i in range(0, 10):
-            # pracownik uczelni
-            name, surname, email, username = gen.get_next_user()
-            user_emp = User.objects.create_user(
-                                                first_name=name,
-                                                email=email,
-                                                last_name=surname,
-                                                username=username
-                                                )
-            user_emp.save()
-            employee = nawia.Employee(title=gen.get_random_title(),
-                                        user=user_emp,
-                                        #position=,
-                                        organizationalUnit=org_units[0],
-                                        )
-            employee.save()
-            employees.append(employee)
+            for i in range(0, employees_per_unit):
+                # pracownik uczelni
+                name, surname, email, username = gen.get_next_user()
+                user_emp = User.objects.create_user(
+                                                    first_name=name,
+                                                    email=email,
+                                                    last_name=surname,
+                                                    username=username
+                                                    )
+                user_emp.save()
+                employee = Employee(title=gen.get_random_title(),
+                                          user=user_emp,
+                                          #position=,
+                                          organizationalUnit=org_units[unit],
+                                          )
+                employee.save()
+                employees.append(employee)
 
 
         self.stdout.write('tematy prac')
         #wygenerowanie tematow prac oraz zmian
         for emp in employees:
             # zmiana stanu pracy dyplomowej (po jednej losowej zmianie_samego_tematu na temat)
-            tssc = nawia.ThesisSubjectStateChange(state=gen.choose_tuple(nawia.ThesisSubjectStateChange.THESIS_SUBJECT_STATE_CHOICES)[0],
+            tssc = ThesisTopicStateChange(state=gen.choose_tuple(nawia.ThesisTopicStateChange.THESIS_SUBJECT_STATE_CHOICES)[0],
                                                    #initiator=,
                                                    comment="jakis wygenerowany comment",
                                                    occuredAt=datetime.date.today()
                                                    )
             tssc.save()
             # temat pracy
-            thesis_subject = nawia.ThesisSubject(#statesHistory=, # many-to-many sa wykozystywanie dopiero po save() 
+            thesis_subject = ThesisTopic(#statesHistory=, # many-to-many sa wykozystywanie dopiero po save() 
                                              title="wygenerowany temat pracy",
                                              description="bardzo szczegolowy opis",
                                              teamMembersLimit=gen.get_rand_int(),
@@ -96,7 +101,7 @@ class Command(BaseCommand):
         #wygeneruj cykle ksztalcenia
         for cycle in gen.study_cycles:
             # cykl ksztalcenia 
-            study_cycle = nawia.StudyCycle(ldapId=gen.get_next_int(),
+            study_cycle = StudyCycle(ldapId=gen.get_next_int(),
                                        name=cycle,
                                        submissionsOpenAt = datetime.date.today(),
                                        submissionsCloseAt = datetime.date.today(),
@@ -118,7 +123,7 @@ class Command(BaseCommand):
                                                     )
             student_userr.save()
             #Student
-            student = nawia.Student(#studyCycles=[study_cycle], #many to many
+            student = Student(#studyCycles=[study_cycle], #many to many
                                     user=student_userr
                                     )
             student.save()
@@ -134,8 +139,8 @@ class Command(BaseCommand):
         # powiaznie student - temat pracy
         i = 0;
         for ts in thesis_subjects:
-            autorship = nawia.Authorship(state=gen.choose_tuple(nawia.Authorship.AUTHORSHIP_STATE_CHOICES)[0],
-                                     thesisSubject=ts,
+            autorship = Authorship(state=gen.choose_tuple(nawia.Authorship.AUTHORSHIP_STATE_CHOICES)[0],
+                                     thesisTopic=ts,
                                      comment="autorship comment",
                                      student=students[i],
                                      createdAt=datetime.date.today(),
@@ -150,10 +155,10 @@ class Command(BaseCommand):
         review_count = len(thesis_subjects)/2 # polowa prac bedzie zrecnzwana
         for r in range(0, review_count):
             #recenzja
-            review = nawia.Review(authorType=gen.choose_tuple(nawia.Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
+            review = Review(authorType=gen.choose_tuple(nawia.Review.REVIEW_AUTHOR_TYPE_CHOICES)[0],
                               author=employees[r],  #tematow pracy jest tyle ile pracownikow a recenzji polowa tego wiec pierwsza ploowa pracownikow dokona zrecenzowania
                               comment="Review comment",
-                              mark=gen.get_random_grade(),
+                              mark=gen.get_grade(),
                               #isDone =,
                               #attachments =,
                               )
@@ -164,7 +169,7 @@ class Command(BaseCommand):
         s = 0;
         for ash in autorships:
             # praca dyplomowa
-            thesis = nawia.Thesis(authorship=ash,
+            thesis = Thesis(authorship=ash,
                                   #isDone=,
                                   #attachments=,
                                   supervisor=employees[s],
@@ -178,7 +183,7 @@ class Command(BaseCommand):
 
         self.stdout.write('kryteria pracy dla studenta')
         # kryteria wzgledem pracy dla studntow
-        sub_crit = nawia.SubmissionCriterion(type=gen.choose_tuple(nawia.SubmissionCriterion.CRITERION_TYPE_CHOICES)[0],
+        sub_crit = SubmissionCriterion(type=gen.choose_tuple(nawia.SubmissionCriterion.CRITERION_TYPE_CHOICES)[0],
                                              label="text opisujacy"
                                             )
           
@@ -193,13 +198,13 @@ class Command(BaseCommand):
         
         self.stdout.write('jenostki zewnetrzne')
         # jednostka zewnetrzna
-        org = nawia.Organization(name="organizacja zewnetrzna"
+        org = Organization(name="organizacja zewnetrzna"
                                  )
 
         
         self.stdout.write('wladze wydzialu')
         # wladze wydzialu
-        authority = nawia.Authority(#role=,
+        authority = Authority(#role=,
                                     )
         self.stdout.write('koniec.')
         
