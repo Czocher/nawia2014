@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from nawia.models import Attachment
 from faculty.models import Employee
+from theses.models import Thesis
 
 class Review(models.Model):
     u'''
@@ -25,6 +26,8 @@ class Review(models.Model):
         (REVIEWERS, _('ReviewType/reviewer')),
         (AUXILIARY_REVIEWERS, _('ReviewType/auxiliary reviewer')),
     )
+    
+    thesis = models.ForeignKey(Thesis, related_name = 'reviews')
 
     type = models.CharField(max_length = 1,
                                   choices = REVIEW_TYPE_CHOICES,
@@ -35,7 +38,7 @@ class Review(models.Model):
     mark = models.FloatField(null = True, blank = True, verbose_name = _('Review/mark'))
     document = models.OneToOneField(Attachment, null = True, blank = True,
                                     related_name = 'reviews',
-                                    verbose_name = 'Review/document')
+                                    verbose_name = _('Review/document'))
 
     #TODO: dodać pola 'deadline' (dla recenzenta) i 'uploadedAt'?
 
