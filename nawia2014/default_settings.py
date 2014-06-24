@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 
-# Django settings for Nawia2014 project.
+# Django settings for nawia2014 project.
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -92,10 +92,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'Nawia2014.urls'
+ROOT_URLCONF = 'nawia2014.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'Nawia2014.wsgi.application'
+WSGI_APPLICATION = 'nawia2014.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
