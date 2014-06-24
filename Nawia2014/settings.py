@@ -141,7 +141,6 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,ou=FCS,o=BUT,c=pl", ldap.SCOPE_SUB
 AUTH_LDAP_BIND_AS_AUTHENTICATING_USER=True
 
 AUTH_LDAP_BIND_DN = "uid=nawiaagent,ou=agents,ou=FCS,o=BUT,c=pl"
-AUTH_LDAP_BIND_PASSWORD = "Nawia2014"
 
 # sterowanie grupami w aplikacji z LDAP - w naszym przypadku nie jest to używane
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
