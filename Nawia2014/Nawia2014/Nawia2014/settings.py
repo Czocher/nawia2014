@@ -20,12 +20,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'nawia.db',
     },
-    'ldap': {
-        'ENGINE': 'ldapdb.backends.ldap',
-        'NAME': 'ldap://ldap.wi.pb.edu.pl:10389/',
-        'USER': 'uid=nawiaagent,ou=agents,ou=FCS,o=BUT,c=pl',
-        'PASSWORD': 'Nawia2014',
-    }
 }
 DATABASE_ROUTERS = ['ldapdb.router.Router']
 
