@@ -48,10 +48,11 @@ coverage.xml
 # Django stuff:
 *.log
 *.pot
+*.db
+settings.py
 
 # Sphinx documentation
 docs/_build/
 obj
 *.suo
 *.pyc
-/Nawia2014/Nawia2014/documentation
