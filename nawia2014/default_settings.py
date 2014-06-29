@@ -3,6 +3,7 @@
 # Django settings for nawia2014 project.
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+path = lambda *x: os.path.join(BASE_DIR, *x)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -58,10 +59,10 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    path('static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -69,17 +70,28 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'n(bd1f1c%e8=_xad02x5qtfn%wgwpi492e$8_erx+d)!tpeoim'
+# Generate a unique SECRET_KEY when required.
+try:
+    from secretkey import SECRET_KEY
+except ImportError:
+    from django.utils.crypto import get_random_string
+
+    with open(path('nawia2014/secretkey.py'), 'w') as secretkey:
+        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+        secretkey.write('SECRET_KEY = \'%s\'' %
+                        (get_random_string(50, chars)))
+
+    import secretkey
+    SECRET_KEY = secretkey.SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -98,10 +110,11 @@ ROOT_URLCONF = 'nawia2014.urls'
 WSGI_APPLICATION = 'nawia2014.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-     os.path.join(BASE_DIR, 'templates').replace('\\','/'),
+    path('templates'),
 )
 
 INSTALLED_APPS = (
@@ -128,7 +141,7 @@ INSTALLED_APPS = (
     'db_tools',
 )
 
-# ustawienia autentykacji przez LDAP
+# LDAP authentication setup.
 import ldap
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
@@ -137,23 +150,28 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 AUTH_LDAP_SERVER_URI = "ldap://ldap.wi.pb.edu.pl:10389"
-AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,ou=FCS,o=BUT,c=pl", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
-AUTH_LDAP_BIND_AS_AUTHENTICATING_USER=True
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,ou=FCS,o=BUT,c=pl",
+                                   ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
 
 AUTH_LDAP_BIND_DN = "uid=nawiaagent,ou=agents,ou=FCS,o=BUT,c=pl"
 
-# sterowanie grupami w aplikacji z LDAP - w naszym przypadku nie jest to używane
+# LDAP group management, not used in this appliacation.
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
-AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=nawiagroups,ou=groups,ou=FCS,o=BUT,c=pl", ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)")
-AUTH_LDAP_MIRROR_GROUPS=True
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    "ou=nawiagroups,ou=groups,ou=FCS,o=BUT,c=pl",
+    ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
+)
+AUTH_LDAP_MIRROR_GROUPS = True
 
-# mapowanie atrybutów użytkowników LDAP na pola klasy 'User'
+# LDAP user attribute mapping for User model.
 AUTH_LDAP_USER_ATTR_MAP = {
     "first_name": "givenName",
     "last_name": "sn",
     "email": "mail",
 }
-# aktualizacja atrybutów użytkownika przy każdym logowaniu
+
+# Update user attributes on each login.
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
 
@@ -186,7 +204,7 @@ LOGGING = {
     }
 }
 
-#Konfiguracja Django Suit (szablon panelu administracyjnego)
+# Django Suite configuration.
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',

@@ -50,6 +50,7 @@ coverage.xml
 *.pot
 *.db
 settings.py
+secretkey.py
 
 # Sphinx documentation
 docs/_build/
