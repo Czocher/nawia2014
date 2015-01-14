@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from nawia.models import StateChange, Attachment
 from faculty.models import StudyCycle, Student
 
+
 class ThesisTopicStateChange(StateChange):
     u'''
     Zmiana stanu tematu pracy z uwzględnieniem czasu jej zajścia i osoby będącej jej źródłem.
@@ -47,7 +48,7 @@ class ThesisTopicStateChange(StateChange):
         (REJECTED, _('ThesisTopicState/rejected')),
         (CANCELLED, _('ThesisTopicState/cancelled')),
         (PUBLISHED, _('ThesisTopicState/published')),
-        (ASSIGNED, _('ThesisTopicState/assigned')),   
+        (ASSIGNED, _('ThesisTopicState/assigned')),
     )
 
     ### Temat pracy dyplomowej, dla którego zaszła zmiana stanu.
@@ -67,7 +68,7 @@ class ThesisTopicStateChange(StateChange):
             self.thesisTopic.state = self
             self.thesisTopic.save()
         super(ThesisTopicStateChange, self).save(*args, **kwargs)
-        
+
 
 class Keyword(models.Model):
     u'''
@@ -80,39 +81,6 @@ class Keyword(models.Model):
         verbose_name_plural = _('Keywords')
 
     pass
-
-class SubmissionCriterion(models.Model):
-    u'''
-    Rodzaj kryterium/pytania kierowanego przez autora tematu do zgłaszających się studentów.
-    '''
-
-    class Meta:
-        verbose_name = _('SubmissionCriterion')
-        verbose_name_plural = _('SubmissionsCriteria')
-
-    ### Identyfikator typu kryterium.
-    BOOLEAN = 'b'
-    ### Identyfikator typu kryterium.
-    INTEGER = 'd'
-    ### Identyfikator typu kryterium.
-    FLOAT = 'f'
-
-    ### Dostępne identyfikatory typów kryteriów wraz z tłumaczeniami.
-    CRITERION_TYPE_CHOICES = (
-        (BOOLEAN, _('CriterionType/boolean')),
-        (INTEGER, _('CriterionType/integer')),
-        (FLOAT, _('CriterionType/float')),
-    )
-    ### Typ kryterium.
-    type = models.CharField(max_length = 1,
-                            choices = CRITERION_TYPE_CHOICES,
-                            verbose_name = _('SubmissionCriterion/type'))
-    ### Opis kryterium.
-    label = models.CharField(max_length = 255,
-                             verbose_name = _('SubmissionCriterion/label'))
-
-    def __unicode__(self):
-        return '%s (%s)' % (self.label, self.get_type_display())
 
 
 class ThesisTopic(models.Model):
@@ -132,25 +100,25 @@ class ThesisTopic(models.Model):
     ### Autor tematu - co najmniej doktor lub firma zewnętrzna.
     ### Relacja z modelem 'User', ponieważ autor pracy może być klasy 'Employee' lub 'Organization'.
     author = models.ForeignKey(User, verbose_name =_('ThesisTopic/author'))
-    title = models.CharField(max_length = 511, 
+    title = models.CharField(max_length = 511,
                              verbose_name =_('ThesisTopic/topic'))
     description = models.TextField(verbose_name=_('ThesisTopic/description'))
-    attachments = models.ManyToManyField(Attachment, null = True, blank = True, 
+    attachments = models.ManyToManyField(Attachment, null = True, blank = True,
                                          verbose_name = _('ThesisTopic/attachments'))
     ### Słowa kluczowe związane z problematyką poruszaną w pracy.
-    keywords = models.ManyToManyField(Keyword, null = True, blank = True, 
+    keywords = models.ManyToManyField(Keyword, null = True, blank = True,
                                       verbose_name = _('ThesisTopic/keywords'))
 
     targetStudyCycles = models.ManyToManyField(StudyCycle, null = True, blank = True,
                                                related_name = 'thesisTopics',
                                                verbose_name = _('ThesisTopic/target study cycles'))
-    
+
     ### Temat dedykowany?
     isDedicated = models.BooleanField(default = False)
     ### Osoby, którym dedykowany jest temat.
     dedicationTargets = models.ManyToManyField(Student, null = True, blank = True,
                                                verbose_name =_('ThesisTopic/dedication targets'))
-    
+
     ### Praca zespołowa?
     coworkersLimit = models.PositiveSmallIntegerField(default = 1,
                                                       verbose_name =_('ThesisTopic/maximal number of coworkers'))
@@ -161,15 +129,55 @@ class ThesisTopic(models.Model):
         '''
         return self.coworkersLimit > 1
 
-    ### Pytania, na które musi odpowiedzieć (kryteria, które musi spełnić) osoba zgłaszająca chęć
-    ### pisania pracy na ten temat. Na podstawie wartości kryteriów ustalana jest
-    ### kolejność studentów na liście zainteresowanych.
-    criteria = models.ManyToManyField(SubmissionCriterion, null = True, blank = True, 
-                                      verbose_name =_('ThesisTopic/sumbission criteria'))
-
     ### flaga określająca czy praca ma zostać opublikowana automatycznie po jej zatwierdzeniu przez wyższe szczeble
-    isAutoPublished = models.BooleanField(default = True, 
+    isAutoPublished = models.BooleanField(default = True,
                                           verbose_name = _('ThesisTopic/published automatically'))
 
     def __unicode__(self):
         return self.title
+
+
+class SubmissionCriterion(models.Model):
+    u'''
+    Tuple (authorship, criterion, value/response),
+    eg. ('Authorship system, John Smith',
+         'Object-oriented programming mark (floating point number)', '5').
+    '''
+
+    BOOLEAN_TYPE = 'b'
+    INTEGER_TYPE = 'd'
+    FLOAT_TYPE = 'f'
+    CRITERION_TYPE_CHOICES = (
+        (BOOLEAN_TYPE, _("Boolean type")),
+        (INTEGER_TYPE, _("Integer type")),
+        (FLOAT_TYPE, _("Float type")),
+    )
+
+    topic = models.ForeignKey(ThesisTopic, verbose_name=_("Topic"))
+    __type = models.CharField(max_length=1, choices=CRITERION_TYPE_CHOICES,
+                              verbose_name=_("Criterion type"))
+    __value = models.CharField(max_length=15, db_column='value',
+                               verbose_name=_("Value"))
+
+    @property
+    def value(self):
+        u'''Returns the value in the correct type.'''
+        if self.__type == SubmissionCriterion.BOOLEAN_TYPE:
+            return bool(self.__value)
+        elif self.__type == SubmissionCriterion.INTEGER_TYPE:
+            return int(self.__value)
+        elif self.__type == SubmissionCriterion.FLOAT_TYPE:
+            return float(self.__value)
+        else:
+            return None
+
+    @value.setter
+    def value(self, value):
+        self.__value = repr(value)
+
+    def __unicode__(self):
+        return '{} => {}'.format(self.criterion, self.value)
+
+    class Meta:
+        verbose_name = _("Submission Criterion")
+        verbose_name_plural = _("Submission Criterions")

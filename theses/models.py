@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 u''' @package theses.models
-Moduł gromadzący modele opisujące prace dyplomowe. 
+Moduł gromadzący modele opisujące prace dyplomowe.
 '''
 
 from django.db import models
@@ -81,7 +81,7 @@ class ThesisStateChange(StateChange):
             self.thesis.state = self
             self.thesis.save()
         super(ThesisStateChange, self).save(*args, **kwargs)
-   
+
 
 class Thesis(models.Model):
     u'''
